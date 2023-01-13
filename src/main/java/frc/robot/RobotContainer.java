@@ -1,5 +1,12 @@
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -18,6 +25,10 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+    String trajectoryJSON = "paths/infiniteSign.wpilib.json";
+    Trajectory trajectory = new Trajectory();
+    
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -49,6 +60,15 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+         } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+         }
+
     }
 
     /**
@@ -69,6 +89,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+       //return new exampleAuto(s_Swerve);
+       return new runPathAuto(s_Swerve, trajectory);
     }
 }
