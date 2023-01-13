@@ -56,6 +56,15 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
+    }
+    public void driveVertical(double speed){
+        SwerveModuleState[] swerveModuleStates = 
+            Constants.Swerve.swerveKinematics.toSwerveModuleStates(
+                ChassisSpeeds.fromFieldRelativeSpeeds(0, speed * Constants.Swerve.maxSpeed, 0, getYaw())
+            );
+
+        for(SwerveModule mod: mSwerveMods)
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], true);
     }    
 
     /* Used by SwerveControllerCommand in Auto */
@@ -69,6 +78,10 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
+    }
+
+    public double getPitch() {
+        return gyro.getPitch();
     }
 
     public void resetOdometry(Pose2d pose) {
