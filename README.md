@@ -1,11 +1,3 @@
-# WARNING: As of 1/8/23 This code is untested after being converted from 22 to 23 WPILib.
-**Once ths code is tested on an actual robot sometime in the next week or so, this warning shall be removed.**
-
-# BaseFalconSwerve </br>
-
-**Basic Swerve Code for a Swerve Module using Falcon Motors, a CTRE CANCoder, and a CTRE Pigeon Gyro** </br>
-This code was designed with Swerve Drive Specialties MK3, MK4, and MK4i style modules in mind, but should be easily adaptable to other styles of modules.</br>
-
 **Setting Constants**
 ----
 The following things must be adjusted to your robot and module's specific constants in the Constants.java file (all distance units must be in meters, and rotation units in radians):</br>
