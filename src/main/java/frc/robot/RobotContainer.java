@@ -32,7 +32,6 @@ public class RobotContainer {
 
 
     ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
-    String trajectoryJSON = "paths/infiniteSign.wpilib.json";
     Trajectory trajectory = new Trajectory();
     
     /* Controllers */
@@ -53,8 +52,8 @@ public class RobotContainer {
     
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
-
-      private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
+    private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -71,13 +70,15 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+         //Autochooser
         createAllAutoPathCommandsBasedOnPathDirectory();
+        autoChooser.addOption("a_Original Test Auto", exampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
-        autoChooser.addOption("test", balanceCommand);
+
 
        
 
-         //Autochooser
          
 
     }
@@ -96,32 +97,27 @@ public class RobotContainer {
             .whileTrue(balanceCommand);
     }
 
+    /**
+     * This method creates a {@link runPathAuto} command for each saved path and
+     * adds the command to autoChooser for selection.
+     */
     public void createAllAutoPathCommandsBasedOnPathDirectory(){
-        System.out.println("running");
-
         File folder = new File("src/main/deploy/paths");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
             if (file.isFile()) {
 
-                System.out.println(file.getName());
-
                 try {
-                    System.out.println(file.getName() + "SSSSS");
 
                     Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/"+ file.getName());
                     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                    autoChooser.addOption("A_" + file.getName().split("wpilib")[0], new runPathAuto(s_Swerve, trajectory));
+                    autoChooser.addOption("A_" + file.getName().split("\\.")[0], new runPathAuto(s_Swerve, trajectory));
                     
                  } catch (IOException ex) {
-                    System.out.println(file.getName() + "fffff");
 
                     DriverStation.reportError("Unable to open trajectory: " + file.getName(), ex.getStackTrace());
+
                  }
-
-
-
-
             }
         }
     }
