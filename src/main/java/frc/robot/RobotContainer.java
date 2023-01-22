@@ -1,7 +1,9 @@
 package frc.robot;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
@@ -10,6 +12,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -26,6 +29,8 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
+
+    ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
     String trajectoryJSON = "paths/infiniteSign.wpilib.json";
     Trajectory trajectory = new Trajectory();
     
@@ -48,6 +53,8 @@ public class RobotContainer {
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
 
+      private SendableChooser<Command> autoChooser = new SendableChooser<>();
+
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -63,14 +70,12 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+        createAllAutoPathCommandsBasedOnPathDirectory();
 
+       
 
-        try {
-            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-         }
+         //Autochooser
+         
 
     }
 
@@ -88,6 +93,29 @@ public class RobotContainer {
             .whileTrue(balanceCommand);
     }
 
+    public void createAllAutoPathCommandsBasedOnPathDirectory(){
+
+        File folder = new File("src/main/deploy/paths");
+        File[] listOfFiles = folder.listFiles();
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+
+
+                try {
+                    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(file.getName());
+                    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+                    autoChooser.addOption("A_" + file.getName().split(".")[0], new runPathAuto(s_Swerve, trajectory));
+                 } catch (IOException ex) {
+                    DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+                 }
+
+
+
+
+            }
+        }
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
@@ -96,6 +124,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
        //return new exampleAuto(s_Swerve);
-       return new runPathAuto(s_Swerve, trajectory);
+       return autoChooser.getSelected();
     }
 }
