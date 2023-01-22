@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -71,6 +72,8 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         createAllAutoPathCommandsBasedOnPathDirectory();
+        SmartDashboard.putData("Auto Selection", autoChooser);
+        autoChooser.addOption("test", balanceCommand);
 
        
 
@@ -94,19 +97,26 @@ public class RobotContainer {
     }
 
     public void createAllAutoPathCommandsBasedOnPathDirectory(){
+        System.out.println("running");
 
         File folder = new File("src/main/deploy/paths");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
             if (file.isFile()) {
 
+                System.out.println(file.getName());
 
                 try {
-                    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(file.getName());
+                    System.out.println(file.getName() + "SSSSS");
+
+                    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/"+ file.getName());
                     trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                    autoChooser.addOption("A_" + file.getName().split(".")[0], new runPathAuto(s_Swerve, trajectory));
+                    autoChooser.addOption("A_" + file.getName().split("wpilib")[0], new runPathAuto(s_Swerve, trajectory));
+                    
                  } catch (IOException ex) {
-                    DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+                    System.out.println(file.getName() + "fffff");
+
+                    DriverStation.reportError("Unable to open trajectory: " + file.getName(), ex.getStackTrace());
                  }
 
 
