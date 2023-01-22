@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,6 +40,8 @@ public class RobotContainer {
     ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
     Trajectory trajectory = new Trajectory();
 
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath("PP_Test_1_CircleStation", new PathConstraints(3, 3));
+
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -54,6 +60,7 @@ public class RobotContainer {
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
+    private final runPathAuto ppExampleAuto = new runPathAuto(s_Swerve, examplePath);
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /**
@@ -74,6 +81,7 @@ public class RobotContainer {
         // Autochooser
         createAllAutoPathCommandsBasedOnPathDirectory();
         autoChooser.addOption("a_Original Test Auto", exampleAuto);
+        autoChooser.addOption("a_Path Planner Circle Station", ppExampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
