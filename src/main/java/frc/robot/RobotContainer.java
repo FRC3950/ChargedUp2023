@@ -40,7 +40,7 @@ public class RobotContainer {
     ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
     Trajectory trajectory = new Trajectory();
 
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(3, 3));
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath("square", new PathConstraints(3, 3));
 //PP_Test_1_CircleStation
     /* Controllers */
     private final Joystick driver = new Joystick(0);
