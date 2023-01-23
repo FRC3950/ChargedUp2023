@@ -40,7 +40,7 @@ public class RobotContainer {
     ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
     Trajectory trajectory = new Trajectory();
 
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("PP_Test_1_CircleStation", new PathConstraints(3, 3));
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath("New Path", new PathConstraints(3, 3));
 //PP_Test_1_CircleStation
     /* Controllers */
     private final Joystick driver = new Joystick(0);
@@ -95,7 +95,7 @@ public class RobotContainer {
         // Autochooser
        // createAllAutoPathCommandsBasedOnPathDirectory();
         autoChooser.addOption("a_Original Test Auto", exampleAuto);
-        autoChooser.addOption("a_Path Planner Circle Station", ppExampleAuto);
+        autoChooser.addOption("a_Patrick Auto that goes straight", ppExampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
