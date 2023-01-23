@@ -23,6 +23,8 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
+    public boolean isInInfoMode = true; //Should include this on all subsystems as a quick-toggle to SD stuff 
+
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();
