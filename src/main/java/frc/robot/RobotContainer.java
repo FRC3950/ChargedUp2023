@@ -40,8 +40,8 @@ public class RobotContainer {
     ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
     Trajectory trajectory = new Trajectory();
 
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("PP_Test_1_CircleStation", new PathConstraints(3, 3));
-
+    PathPlannerTrajectory examplePath = PathPlanner.loadPath("square", new PathConstraints(3, 3));
+//PP_Test_1_CircleStation
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -67,6 +67,20 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+
+
+        try {
+
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/TwoCone_DOCKED.wpilib.json");
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+            autoChooser.addOption("A_TwoCone", new runPathAuto(s_Swerve, trajectory));
+
+        } catch (IOException ex) {
+
+            DriverStation.reportError("Unable to open trajectory: ", ex.getStackTrace());
+
+        }
+
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -79,9 +93,9 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Autochooser
-        createAllAutoPathCommandsBasedOnPathDirectory();
+       // createAllAutoPathCommandsBasedOnPathDirectory();
         autoChooser.addOption("a_Original Test Auto", exampleAuto);
-        autoChooser.addOption("a_Path Planner Circle Station", ppExampleAuto);
+        autoChooser.addOption("a_Patrick Auto that goes straight", ppExampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
