@@ -37,11 +37,6 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
-    ArrayList<String> trajectoryPathArrayList = new ArrayList<String>();
-    Trajectory trajectory = new Trajectory();
-
-    PathPlannerTrajectory examplePath = PathPlanner.loadPath("square", new PathConstraints(3, 3));
-//PP_Test_1_CircleStation
     /* Controllers */
     private final Joystick driver = new Joystick(0);
 
@@ -57,29 +52,20 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
 
+    // Trajectories
+    PathPlannerTrajectory squarePath = PathPlanner.loadPath("square", new PathConstraints(3, 3));
+    // PP_Test_1_CircleStation
+
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
-    private final runPathAuto ppExampleAuto = new runPathAuto(s_Swerve, examplePath);
+    private final runPathAuto squarePathCommand = new runPathAuto(s_Swerve, squarePath);
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-
-
-        try {
-
-            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/TwoCone_DOCKED.wpilib.json");
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-            autoChooser.addOption("A_TwoCone", new runPathAuto(s_Swerve, trajectory));
-
-        } catch (IOException ex) {
-
-            DriverStation.reportError("Unable to open trajectory: ", ex.getStackTrace());
-
-        }
 
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -93,9 +79,9 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Autochooser
-       // createAllAutoPathCommandsBasedOnPathDirectory();
+        // createAllAutoPathCommandsBasedOnPathDirectory();
         autoChooser.addOption("a_Original Test Auto", exampleAuto);
-        autoChooser.addOption("a_Patrick Auto that goes straight", ppExampleAuto);
+        autoChooser.addOption("a_Patrick Auto that goes straight", squarePathCommand);
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
@@ -121,21 +107,15 @@ public class RobotContainer {
      * adds the command to autoChooser for selection.
      */
     public void createAllAutoPathCommandsBasedOnPathDirectory() {
-        File folder = new File("src/main/deploy/paths");
+        File folder = new File("src/main/deploy/pathplanner");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
             if (file.isFile()) {
-
-                try {
-
-                    Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve("paths/" + file.getName());
-                    trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-                    autoChooser.addOption("A_" + file.getName().split("\\.")[0], new runPathAuto(s_Swerve, trajectory));
-
-                } catch (IOException ex) {
-
-                    DriverStation.reportError("Unable to open trajectory: " + file.getName(), ex.getStackTrace());
-
+                if (file.getName().split("\\.") != null) {
+                    PathPlannerTrajectory loadedTrajectory = PathPlanner.loadPath(file.getName().split("\\.")[0],
+                            new PathConstraints(3, 3));
+                    autoChooser.addOption("A_" + file.getName().split("\\.")[0],
+                            new runPathAuto(s_Swerve, loadedTrajectory));
                 }
             }
         }
