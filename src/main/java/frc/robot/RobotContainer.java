@@ -79,9 +79,8 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Autochooser
-        // createAllAutoPathCommandsBasedOnPathDirectory();
-        autoChooser.addOption("a_Original Test Auto", exampleAuto);
-        autoChooser.addOption("a_Patrick Auto that goes straight", squarePathCommand);
+        createAllAutoPathCommandsBasedOnPathDirectory();
+
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
@@ -107,7 +106,8 @@ public class RobotContainer {
      * adds the command to autoChooser for selection.
      */
     public void createAllAutoPathCommandsBasedOnPathDirectory() {
-        File folder = new File("src/main/deploy/pathplanner");
+        
+        File folder = new File(Filesystem.getDeployDirectory() + "/pathplanner/");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
             if (file.isFile()) {
