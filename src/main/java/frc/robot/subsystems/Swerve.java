@@ -65,10 +65,11 @@ public class Swerve extends SubsystemBase {
             mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
         }
     }
-    public void driveVertical(double speed){
+
+    public void driveHorizontal(double speed){
         SwerveModuleState[] swerveModuleStates = 
             Constants.Swerve.swerveKinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds(0, speed * Constants.Swerve.maxSpeed, 0, getYaw())
+                ChassisSpeeds.fromFieldRelativeSpeeds( speed * Constants.Swerve.maxSpeed, 0, 0, getYaw())
             );
 
         for(SwerveModule mod: mSwerveMods)
@@ -130,12 +131,13 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());  
-
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-           // SmartDashboard.putNumber("Mod " + mod.moduleNumber + " drive encoder ", mod.getDriveEncoder());
+        if(isInInfoMode){
+            for(SwerveModule mod : mSwerveMods){
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
+                SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+            }
+            SmartDashboard.putNumber("Pitch", getPitch());
         }
     }
 ;}

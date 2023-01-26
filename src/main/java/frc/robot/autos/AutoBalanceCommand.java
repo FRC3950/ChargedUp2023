@@ -36,14 +36,14 @@ public class AutoBalanceCommand extends CommandBase {
   public void execute() {
     if(drivetrain.getPitch() != zeroPosition + deadzone || drivetrain.getPitch() != zeroPosition - deadzone){
       speed = kP * drivetrain.getPitch();
-      drivetrain.driveVertical(speed);
+      drivetrain.driveHorizontal(speed);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drivetrain.driveVertical(0.0);
+    drivetrain.driveHorizontal(0.0);
   }
 
   // Returns true when the command should end.

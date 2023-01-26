@@ -7,11 +7,13 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "bin/": true,
+    "**/Thumbs.db": true,
+    "**/*.crswap": true,
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true,
+    "bin/": true,
     "**/*~": true
   },
   "java.test.config": [
@@ -25,5 +27,6 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "hide-files.files": []
 }
