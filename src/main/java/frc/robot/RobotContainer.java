@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -67,6 +70,10 @@ public class RobotContainer {
      */
     public RobotContainer() {
 
+// Simple path with holonomic rotation. Stationary start/end. Max velocity of 3 m/s and max accel of 3 m/s^2
+
+
+
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
                         s_Swerve,
@@ -80,7 +87,6 @@ public class RobotContainer {
 
         // Autochooser
         createAllAutoPathCommandsBasedOnPathDirectory();
-
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
@@ -120,6 +126,7 @@ public class RobotContainer {
             }
         }
     }
+
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
