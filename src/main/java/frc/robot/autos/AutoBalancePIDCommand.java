@@ -8,6 +8,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.*;
 
+//34.25 is the angle to correct for!
+
+
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
@@ -16,7 +19,7 @@ public class AutoBalancePIDCommand extends PIDCommand {
   public AutoBalancePIDCommand(Swerve swerve) {
     super(
         // The controller that the command will use
-        new PIDController(0.1, 0, 0),
+        new PIDController(0.05, 0, 0),
         // This should return the measurement
         swerve::getPitch,
         // This should return the setpoint (can also be a constant)
@@ -27,6 +30,7 @@ public class AutoBalancePIDCommand extends PIDCommand {
         }, swerve);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+getController().setTolerance(1.5);
   }
 
   // Returns true when the command should end.
