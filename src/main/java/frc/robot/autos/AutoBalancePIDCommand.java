@@ -26,7 +26,7 @@ public class AutoBalancePIDCommand extends PIDCommand {
         () -> 0,
         // This uses the output
         output -> {
-          swerve.driveHorizontal(output);
+          swerve.driveHorizontal(output); //consider output + base number 
         }, swerve);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.

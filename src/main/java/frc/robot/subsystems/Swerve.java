@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Swerve extends SubsystemBase {
@@ -25,10 +26,29 @@ public class Swerve extends SubsystemBase {
 
     public boolean isInInfoMode = true; //Should include this on all subsystems as a quick-toggle to SD stuff 
 
+    //SmartDashBoard
+    double angleToTurn = 0.0;
+    double horizontalSpeed_SD = 0.5;
+    
+
+    //Might Consider Paramterizing with SmartDashboard
+    public Command turnToZeroCommand(){
+
+       return this.run(() -> this.drive(new Translation2d(), SmartDashboard.getNumber("angleToTurn", 0), true, true));
+    }
+
+    public Command driveHorizontalCommand(){
+
+        return this.runEnd(()-> this.driveHorizontal(SmartDashboard.getNumber("horizontalSpeed_SD", 0.25)), ()-> this.driveHorizontal(0.0));
+    }
+    
+
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.configFactoryDefault();
         zeroGyro();
+        SmartDashboard.putNumber("angleToTurn", angleToTurn);
+        SmartDashboard.putNumber("horizontalSpeed_SD", horizontalSpeed_SD);
 
         mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),

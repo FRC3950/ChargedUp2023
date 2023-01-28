@@ -50,29 +50,23 @@ public class RobotContainer {
 
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
+    private final JoystickButton startHorizontalDrive = new JoystickButton(driver, XboxController.Button.kBack.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
 
-    // Trajectories
-    PathPlannerTrajectory squarePath = PathPlanner.loadPath("square", new PathConstraints(3, 3));
-    // PP_Test_1_CircleStation
-
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
-    private final runPathAuto squarePathCommand = new runPathAuto(s_Swerve, squarePath);
+
+    /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-
-// Simple path with holonomic rotation. Stationary start/end. Max velocity of 3 m/s and max accel of 3 m/s^2
-
-
 
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -87,6 +81,7 @@ public class RobotContainer {
 
         // Autochooser
         createAllAutoPathCommandsBasedOnPathDirectory();
+        autoChooser.addOption("Example S Curve", exampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
 
     }
@@ -101,10 +96,22 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro())); //Button this way might be 'safer' since the button is private/final when defined outside the constructor. 
+        //Honestly not sure what the best practice is or if it matters. Probably would never collide if we kept it public/changeable... idk?
 
-        new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
+         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
                 .whileTrue(balanceCommand);
+
+        new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+                .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+
+        startHorizontalDrive.whileTrue(s_Swerve.driveHorizontalCommand());
+
+
+            //This demonstrates Instance Command FActory Methods - it's cool :D
+            //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
+        new JoystickButton(driver, XboxController.Button.kA.value)
+        .whileTrue(s_Swerve.turnToZeroCommand());
     }
 
     /**
@@ -112,7 +119,7 @@ public class RobotContainer {
      * adds the command to autoChooser for selection.
      */
     public void createAllAutoPathCommandsBasedOnPathDirectory() {
-        
+
         File folder = new File(Filesystem.getDeployDirectory() + "/pathplanner/");
         File[] listOfFiles = folder.listFiles();
         for (File file : listOfFiles) {
@@ -126,7 +133,6 @@ public class RobotContainer {
             }
         }
     }
-
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

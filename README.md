@@ -1,5 +1,18 @@
 **Setting Constants**
 ----
+
+New stuff to try since 1/28:
+Added 2 examples of Instance Command Factory Methods in Swerve Subsystem
+a) DriveHorziontalCommand & turnToZero
+
+Try out the turnToZero to learn how drive method responds to different angles
+Try out the Drive HorziontalCommand to figure out the highest speed parameter before robot overcomes friction.
+
+We will likely add the min speed to our autobalancePID in the future!
+
+Also advance NORTH!
+
+
 The following things must be adjusted to your robot and module's specific constants in the Constants.java file (all distance units must be in meters, and rotation units in radians):</br>
 These instructions are mostly followable from Step 
 1. Gyro Settings: ```pigeonID``` and ```invertGyro``` (ensure that the gyro rotation is CCW+ (Counter Clockwise Positive)
