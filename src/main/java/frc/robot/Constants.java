@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.lib.util.COTSFalconSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
@@ -164,4 +166,19 @@ public final class Constants {
             new PathPoint(new Translation2d(0.0, -0.5588), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
         );
     }
+
+    public static final class Intake{
+
+        static enum states {
+            RETRACTED(DoubleSolenoid.Value.kReverse),
+            EXTENDED(DoubleSolenoid.Value.kForward);
+
+            private final DoubleSolenoid.Value value;
+
+            private states(DoubleSolenoid.Value value){
+                this.value = value;
+            }
+        }
+    }
+    
 }
