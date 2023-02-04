@@ -158,7 +158,7 @@ public final class Constants {
             new PathPoint(new Translation2d(0.0, 0.5588), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
         );
 
-        PathPlannerTrajectory advanceSouth_22inches = PathPlanner.generatePath(
+        public static final PathPlannerTrajectory advanceSouth_22inches = PathPlanner.generatePath(
             new PathConstraints(3, 2), 
             new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
             new PathPoint(new Translation2d(0.0, -0.5588), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
