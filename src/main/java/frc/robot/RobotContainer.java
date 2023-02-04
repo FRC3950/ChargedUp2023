@@ -105,6 +105,9 @@ public class RobotContainer {
         new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
                 .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
 
+        new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+                .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceSouth_22inches));
+
         startHorizontalDrive.whileTrue(s_Swerve.driveHorizontalCommand());
 
 
