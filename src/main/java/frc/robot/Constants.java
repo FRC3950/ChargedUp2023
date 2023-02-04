@@ -169,16 +169,33 @@ public final class Constants {
 
     public static final class Intake{
 
-        static enum states {
-            RETRACTED(DoubleSolenoid.Value.kReverse),
-            EXTENDED(DoubleSolenoid.Value.kForward);
+        public static final int wrist = 11; //FIXME
+        public static final int encoderLimit = 90000; //FIXME (value can be calculated)
 
-            private final DoubleSolenoid.Value value;
+        //Intake Motors
+        public static final int upperID = 5; //FIXME
+        public static final int lowerID = 6; //FIXME
 
-            private states(DoubleSolenoid.Value value){
-                this.value = value;
-            }
-        }
+        //Solenoid
+        public static final int forward = 0; //FIXME
+        public static final int reverse = 0; //FIXME
+
+        public static final Value RETRACTED = Value.kReverse;
+        public static final Value EXTENDED = Value.kForward;
+        
     }
-    
+
+    public static final class Telescope{
+
+        public static final int motor = 12; //FIXME
+
+        public static final int forward = 1; //FIXME
+        public static final int reverse = 1; //FIXME
+
+        public static final int kGearReduction = 25;
+        public static final double kGearCircumference = Math.PI * 4.0; //CM //FIXME
+        public static final double telescopeLength = 45; //CM //FIXME
+        public static final double encoderLimit = (telescopeLength / kGearCircumference) * 4096 * kGearReduction;
+
+    }
 }
