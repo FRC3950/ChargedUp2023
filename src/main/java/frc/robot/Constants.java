@@ -164,4 +164,17 @@ public final class Constants {
             new PathPoint(new Translation2d(0.0, -0.5588), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
         );
     }
+
+    public static final class kGains {
+
+        public static double kF = 0;
+        public static double kP = 0;
+        public static double kI = 0;
+        public static double kD = 0;
+
+    }
+
+    public static int kTimeoutMs = 30;
+    public static int kSlotIdx = 0;
+    public static int kPIDLoopIdx;
 }
