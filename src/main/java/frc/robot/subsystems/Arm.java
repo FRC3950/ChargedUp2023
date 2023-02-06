@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -74,6 +75,8 @@ armMotor.configMotionAcceleration(6000, Constants.kTimeoutMs);
 armMotor.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
 
 
+
+
   }
 
   @Override
@@ -82,7 +85,7 @@ armMotor.setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutM
   }
 
   public void setArmHeight(double height){
-    armMotor.set(ControlMode.MotionMagic, height);
+    armMotor.set(ControlMode.MotionMagic, height,DemandType.ArbitraryFeedForward,0.1);
 
   }
 
