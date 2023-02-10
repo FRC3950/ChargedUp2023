@@ -30,7 +30,7 @@ public class AutoBalancePIDCommand extends PIDCommand {
         }, swerve);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-getController().setTolerance(1.5);
+    getController().setTolerance(1.5);
   }
 
   // Returns true when the command should end.

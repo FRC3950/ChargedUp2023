@@ -19,7 +19,7 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
-    public static final class Swerve {
+    public static final class kSwerve {
         public static final int pigeonID = 12;
         public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
@@ -167,7 +167,7 @@ public final class Constants {
         );
     }
 
-    public static final class Intake{
+    public static abstract class kIntake{
 
         public static final int wrist = 11; //FIXME
         public static final int encoderLimit = 90000; //FIXME (value can be calculated)
@@ -185,9 +185,10 @@ public final class Constants {
         
     }
 
-    public static final class Telescope{
+    public static abstract class kTelescope{
 
-        public static final int motor = 12; //FIXME
+        public static final int leader = 12; //FIXME
+        public static final int follower = 13; //FIXME
 
         public static final int forward = 1; //FIXME
         public static final int reverse = 1; //FIXME

@@ -21,7 +21,7 @@ public class TelescopePIDCommand extends PIDCommand {
         // This should return the measurement
         telescope::getEncoder,
         // This should return the setpoint (can also be a constant)
-        () -> Constants.Telescope.encoderLimit,
+        () -> Constants.kTelescope.encoderLimit,
         // This uses the output
         output -> {
           telescope.setMotor(output);

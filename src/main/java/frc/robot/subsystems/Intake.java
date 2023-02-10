@@ -17,16 +17,16 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new IntakeSubsytem. */
-  private final WPI_TalonFX upper = new WPI_TalonFX(Constants.Intake.upperID);
-  private final WPI_TalonFX lower = new WPI_TalonFX(Constants.Intake.lowerID);
-  private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.Intake.wrist);
+  private final WPI_TalonFX upper = new WPI_TalonFX(Constants.kIntake.upperID);
+  private final WPI_TalonFX lower = new WPI_TalonFX(Constants.kIntake.lowerID);
+  private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
 
   private final double kP, kI, kD, kF, kMaxSensorVelocity; //FIXME
 
   boolean isInInfoMode = false;
   // Will also need a sensor at some point. 
 
-  DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Intake.forward, Constants.Intake.reverse);
+  DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
 
   public Intake() {
     //All MotionMagic stuff with wrist will go here if we decide to use it. 
@@ -56,7 +56,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void toggleSolenoid(){
-    Value newState = (getState().equals(Constants.Intake.EXTENDED)) ? Constants.Intake.RETRACTED : Constants.Intake.EXTENDED;
+    Value newState = (getState().equals(Constants.kIntake.EXTENDED)) ? Constants.kIntake.RETRACTED : Constants.kIntake.EXTENDED;
     solenoid.set(newState);
   }
 
@@ -80,7 +80,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     if(isInInfoMode){
-      SmartDashboard.putBoolean("Intake solenoid", (getState().equals(Constants.Intake.EXTENDED)));
+      SmartDashboard.putBoolean("Intake solenoid", (getState().equals(Constants.kIntake.EXTENDED)));
     }
   }
 }
