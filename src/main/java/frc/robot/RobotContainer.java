@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -23,6 +24,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
@@ -42,6 +46,8 @@ public class RobotContainer {
 
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick manipulate = new Joystick(1);
+    //private final Joystick buttonBox = new Joystick(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -53,9 +59,13 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
     private final JoystickButton startHorizontalDrive = new JoystickButton(driver, XboxController.Button.kBack.value);
 
+    //private final JoystickButton testButton = new JoystickButton(buttonBox, 12);
+
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Intake s_Intake = new Intake();
+    private final Telescope s_Telescope = new Telescope();
+    private final Wrist s_Wrist = new Wrist();
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
@@ -77,6 +87,9 @@ public class RobotContainer {
                         () -> -driver.getRawAxis(rotationAxis),
                         () -> robotCentric.getAsBoolean()));
 
+
+        s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> manipulate.getRawAxis(1)));
+
         // Configure the button bindings
         configureButtonBindings();
 
@@ -97,22 +110,51 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
+        //testButton.onTrue(new InstantCommand(() -> System.out.println("Button pressed")));
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro())); //Button this way might be 'safer' since the button is private/final when defined outside the constructor. 
         //Honestly not sure what the best practice is or if it matters. Probably would never collide if we kept it public/changeable... idk?
 
-         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
-                .whileTrue(balanceCommand);
+        new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
+            .whileTrue(balanceCommand);
 
-        new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-                .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+        // new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        //     .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+
+        new JoystickButton(driver, XboxController.Button.kX.value)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
+        
+        new JoystickButton(driver, XboxController.Button.kY.value)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.75), () -> s_Intake.setIntake(0.0), s_Intake));
+        
+        new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+            .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
+
+           
 
         startHorizontalDrive.whileTrue(s_Swerve.driveHorizontalCommand());
-
-
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
         new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileTrue(s_Swerve.turnToZeroCommand());
+            .whileTrue(s_Swerve.turnToZeroCommand());
+
+        //Wrist PID Command. This is PURE JAVA
+        new JoystickButton(manipulate, XboxController.Button.kA.value)
+            .whileTrue(new PIDCommand(
+                new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]), 
+                () -> s_Wrist.getWristEncoder(), 
+                () -> Constants.kIntake.encoderLimit, 
+                (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
+            )
+        );
+        //Wrist PID but reversed
+        new JoystickButton(manipulate, XboxController.Button.kB.value)
+            .whileTrue(new PIDCommand(
+                new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]),
+                () -> s_Wrist.getWristEncoder(), //looks better than member function
+                () -> 0,
+                (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
+            )
+        );
     }
 
     /**
