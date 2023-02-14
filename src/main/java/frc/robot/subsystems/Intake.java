@@ -19,14 +19,14 @@ public class Intake extends SubsystemBase {
   /** Creates a new IntakeSubsytem. */
   private final WPI_TalonFX upper = new WPI_TalonFX(Constants.kIntake.upperID);
   private final WPI_TalonFX lower = new WPI_TalonFX(Constants.kIntake.lowerID);
-  private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
+  //private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
 
   private final double kP, kI, kD, kF, kMaxSensorVelocity; //FIXME
 
   boolean isInInfoMode = false;
   // Will also need a sensor at some point. 
 
-  DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
+  private final DoubleSolenoid solenoid = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
 
   public Intake() {
     //All MotionMagic stuff with wrist will go here if we decide to use it. 
@@ -40,15 +40,15 @@ public class Intake extends SubsystemBase {
 
     kMaxSensorVelocity = 4096 * 2;
 
-    wrist.config_kP(0, kP);
-    wrist.config_kI(0, kI);
-    wrist.config_kD(0, kD);
-    wrist.config_kF(0, kF);
+    //wrist.config_kP(0, kP);
+    //wrist.config_kI(0, kI);
+    //wrist.config_kD(0, kD);
+    //wrist.config_kF(0, kF);
 
     //Other motion magic stuff will go here
 
 
-    wrist.configMotionAcceleration(kMaxSensorVelocity/2, 0);
+    //wrist.configMotionAcceleration(kMaxSensorVelocity/2, 0);
   }
 
   public DoubleSolenoid.Value getState(){
@@ -56,25 +56,17 @@ public class Intake extends SubsystemBase {
   }
 
   public void toggleSolenoid(){
-    Value newState = (getState().equals(Constants.kIntake.EXTENDED)) ? Constants.kIntake.RETRACTED : Constants.kIntake.EXTENDED;
+    System.out.println(getState().toString()); //FIXME
+    Value newState = (getState().equals(Value.kForward)) ? Constants.kIntake.RETRACTED : Constants.kIntake.EXTENDED;
     solenoid.set(newState);
+    System.out.println(newState.toString());
   }
+
+ 
 
   public void setIntake(double speed){
     upper.set(speed);
     lower.set(speed);
-  }
-
-  public void setWrist(double speed){
-    wrist.set(ControlMode.MotionMagic, speed);
-  }
-  
-  public void setWristEncoder(double count){
-    wrist.getSensorCollection().setIntegratedSensorPosition(count, 0);
-  }
-
-  public double getWristEncoder(){
-    return wrist.getSelectedSensorPosition();
   }
 
   @Override
