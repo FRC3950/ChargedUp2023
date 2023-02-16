@@ -31,7 +31,7 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
-    public boolean isInInfoMode = true; //Should include this on all subsystems as a quick-toggle to SD stuff 
+    public boolean isInInfoMode = false; //Should include this on all subsystems as a quick-toggle to SD stuff 
 
     //SmartDashBoard
     double angleToTurn = 0.0;

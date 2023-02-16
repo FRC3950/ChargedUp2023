@@ -98,7 +98,7 @@ public final class Constants {
         /* Front Left Module - Module 0 */
         public static final class Mod0 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 1;
-            public static final int angleMotorID = 2;
+            public static final int angleMotorID = 18;
             public static final int canCoderID = 40;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(189.9);
             public static final SwerveModuleConstants constants = 
@@ -117,7 +117,7 @@ public final class Constants {
         
         /* Back Left Module - Module 2 */
         public static final class Mod2 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 9;
+            public static final int driveMotorID = 0;
             public static final int angleMotorID = 6;
             public static final int canCoderID = 23;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(139.5);
@@ -128,7 +128,7 @@ public final class Constants {
         /* Back Right Module - Module 3 */
         public static final class Mod3 { //TODO: This must be tuned to specific robot
             public static final int driveMotorID = 7;
-            public static final int angleMotorID = 8;
+            public static final int angleMotorID = 16;
             public static final int canCoderID = 32;
             public static final Rotation2d angleOffset = Rotation2d.fromDegrees(275.2);
             public static final SwerveModuleConstants constants = 
@@ -169,16 +169,16 @@ public final class Constants {
 
     public static abstract class kIntake{
 
-        public static final int wrist = 11; //FIXME
+        public static final int wrist = 9; //FIXME
         public static final int encoderLimit = 90000; //FIXME (value can be calculated)
 
         //Intake Motors
-        public static final int upperID = 5; //FIXME
-        public static final int lowerID = 6; //FIXME
+        public static final int upperID = 34; 
+        public static final int lowerID = 33; 
 
         //Solenoid
-        public static final int forward = 0; //FIXME
-        public static final int reverse = 0; //FIXME
+        public static final int forward = 1; 
+        public static final int reverse = 0; 
 
         public static final Value RETRACTED = Value.kReverse;
         public static final Value EXTENDED = Value.kForward;
@@ -187,11 +187,10 @@ public final class Constants {
 
     public static abstract class kTelescope{
 
-        public static final int leader = 12; //FIXME
-        public static final int follower = 13; //FIXME
+        public static final int leader = 39; //FIXME
 
-        public static final int forward = 1; //FIXME
-        public static final int reverse = 1; //FIXME
+        public static final int forward = 2; //FIXME
+        public static final int reverse = 3; //FIXME
 
         public static final int kGearReduction = 25;
         public static final double kGearCircumference = Math.PI * 4.0; //CM //FIXME

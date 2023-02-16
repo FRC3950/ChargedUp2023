@@ -7,25 +7,28 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Telescope;
+import frc.robot.subsystems.Wrist;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class TelescopePIDCommand extends PIDCommand {
-  /** Creates a new TelescopePIDCommand. */
-  public TelescopePIDCommand(Telescope s_Wrist) {
+public class WristPIDCommand extends PIDCommand {
+  /** Creates a new WristPIDCommand. */
+  public WristPIDCommand(Wrist s_Wrist, double count) {
     super(
         // The controller that the command will use
-        new PIDController(0.35, 0, 0), //FIXME
+        new PIDController(
+        s_Wrist.getPIDDashboardConstants()[0], //FIXME
+        s_Wrist.getPIDDashboardConstants()[1], 
+        s_Wrist.getPIDDashboardConstants()[2]),
         // This should return the measurement
-        s_Wrist::getEncoder,
+        s_Wrist::getWristEncoder,
         // This should return the setpoint (can also be a constant)
-        () -> Constants.kTelescope.encoderLimit,
+        () -> count, 
         // This uses the output
         output -> {
-          s_Wrist.setMotor(output);
-        });
+          s_Wrist.setSpeed(output + s_Wrist.getPIDDashboardConstants()[3]);
+        }, s_Wrist);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     getController().setTolerance(2000);

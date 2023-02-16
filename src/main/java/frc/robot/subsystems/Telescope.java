@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -18,13 +19,12 @@ import frc.robot.Constants;
 public class Telescope extends SubsystemBase {
   /** Creates a new Telescope. */
   private final WPI_TalonFX leader = new WPI_TalonFX(Constants.kTelescope.leader);
-  private final WPI_TalonFX follower = new WPI_TalonFX(Constants.kTelescope.follower);
-  private final DoubleSolenoid brake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.kTelescope.forward, Constants.kTelescope.reverse);
+  private final DoubleSolenoid brake = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kTelescope.forward, Constants.kTelescope.reverse);
   private boolean isInInfoMode = false;
 
   public Telescope() {
     setEncoder(0);
-    follower.follow(leader); //might need to invert follower
+    leader.setNeutralMode(NeutralMode.Brake);
   }
 
   public void setEncoder(int count){
@@ -39,8 +39,12 @@ public class Telescope extends SubsystemBase {
     leader.set(ControlMode.Position, count); //not sure if this is ideal
   }
 
+  public void setPercent(double speed){
+    leader.set(speed);
+  }
+
   public void toggleBrake(){
-    if(brake.get() != Constants.kIntake.EXTENDED){
+    if(!brake.get().equals(Constants.kIntake.EXTENDED)){
       brake.set(Constants.kIntake.EXTENDED);
     }
     else {
@@ -50,6 +54,10 @@ public class Telescope extends SubsystemBase {
 
   public void setBrake(Value state){
     brake.set(state);
+  }
+
+  public Value getBrake(){
+    return brake.get();
   }
 
   @Override
