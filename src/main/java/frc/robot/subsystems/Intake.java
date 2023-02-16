@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase {
   boolean isInInfoMode = false;
   // Will also need a sensor at some point. 
 
-  DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
+  private final DoubleSolenoid solenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
 
   public Intake() {
     //All MotionMagic stuff with wrist will go here if we decide to use it. 
