@@ -137,23 +137,21 @@ public class RobotContainer {
         new JoystickButton(driver, XboxController.Button.kA.value)
             .whileTrue(s_Swerve.turnToZeroCommand());
 
-        //Wrist PID Command. This is PURE JAVA
-        new JoystickButton(manipulate, XboxController.Button.kA.value)
-            .whileTrue(new PIDCommand(
-                new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]), 
-                () -> s_Wrist.getWristEncoder(), 
-                () -> Constants.kIntake.encoderLimit, 
-                (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
-            )
-        );
-        //Wrist PID but reversed
+       
+        // new JoystickButton(manipulate, XboxController.Button.kA.value)
+        //     .whileTrue(new PIDCommand(
+        //         new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]), 
+        //         s_Wrist::getWristEncoder, 
+        //         () -> Constants.kIntake.encoderLimit, 
+        //         (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
+        //     )
+        // ); Example of an inline PID command 
+
         new JoystickButton(manipulate, XboxController.Button.kB.value)
-            .whileTrue(new PIDCommand(
-                new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]),
-                () -> s_Wrist.getWristEncoder(), //looks better than member function
-                () -> 0,
-                (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
-            )
+            .onTrue(new WristPIDCommand(s_Wrist, 0)
+        );
+        new JoystickButton(manipulate, XboxController.Button.kA.value)
+            .onTrue(new WristPIDCommand(s_Wrist, Constants.kIntake.encoderLimit)
         );
     }
 

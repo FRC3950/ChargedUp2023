@@ -14,28 +14,29 @@ import frc.robot.subsystems.Wrist;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class WristPIDCommand extends PIDCommand {
   /** Creates a new WristPIDCommand. */
-  public WristPIDCommand(Wrist s_Wrist) {
+  public WristPIDCommand(Wrist s_Wrist, double count) {
     super(
         // The controller that the command will use
         new PIDController(
-        s_Wrist.getPIDDashboardConstants()[0], 
+        s_Wrist.getPIDDashboardConstants()[0], //FIXME
         s_Wrist.getPIDDashboardConstants()[1], 
         s_Wrist.getPIDDashboardConstants()[2]),
         // This should return the measurement
         s_Wrist::getWristEncoder,
         // This should return the setpoint (can also be a constant)
-        () -> Constants.kIntake.encoderLimit, 
+        () -> count, 
         // This uses the output
         output -> {
           s_Wrist.setSpeed(output + s_Wrist.getPIDDashboardConstants()[3]);
         }, s_Wrist);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+    getController().setTolerance(2000);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return getController().atSetpoint();
   }
 }
