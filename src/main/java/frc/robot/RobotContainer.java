@@ -66,6 +66,7 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
+    private final Arm a_Arm = new Arm();
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);

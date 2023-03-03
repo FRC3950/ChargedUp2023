@@ -177,8 +177,8 @@ public final class Constants {
         public static final int lowerID = 15; 
 
         //Solenoid
-        public static final int forward = 1; 
-        public static final int reverse = 0; 
+        public static final int forward = 4; 
+        public static final int reverse = 5; 
 
         public static final Value RETRACTED = Value.kReverse;
         public static final Value EXTENDED = Value.kForward;

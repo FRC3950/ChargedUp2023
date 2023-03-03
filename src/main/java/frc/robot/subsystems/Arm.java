@@ -26,6 +26,8 @@ public class Arm extends SubsystemBase {
 
   //Need Limit Switch ID fal 5
 
+  //2 close /3 open for the arm lock
+
   /** Creates a new Arm. */
   public Arm() {
 
@@ -40,6 +42,8 @@ public void armToAngle(){
   lowerArm.config_kP(0, SmartDashboard.getNumber("lowerArm kP", 0.0));
   lowerArm.config_kI(0, SmartDashboard.getNumber("lowerArm kI", 0.0));
   lowerArm.config_kD(0, SmartDashboard.getNumber("lowerArm kD", 0.0));
+
+  lowerArm.set(ControlMode.MotionMagic, 0, null, 0);
 
 
 lowerArm.set(ControlMode.Position, SmartDashboard.getNumber("Arm Angle in Ticks", 0));
@@ -71,7 +75,7 @@ public boolean isLimitSwithEngaged(){
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("Limit Switch Engaged", isLimitSwithEngaged());
-    SmartDashboard.putNumber("angle", encoder.getRate());
+    SmartDashboard.putNumber("angle", encoder.getDistance());
     SmartDashboard.putNumber("Encoder Rate", encoder.getRate());
   }
 }
