@@ -190,8 +190,8 @@ public final class Constants {
         public static final int leader = 12; //FIXME
 
 
-        public static final int forward = 2; //FIXME
-        public static final int reverse = 3; //FIXME
+        public static final int forward = 0; //FIXME
+        public static final int reverse = 1; //FIXME
 
         public static final int kGearReduction = 25;
         public static final double kGearCircumference = Math.PI * 4.0; //CM //FIXME
@@ -208,4 +208,13 @@ public final class Constants {
         public static final int UpperArm = 5;
 
     }
+
+    public static abstract class kLock{
+
+        public static final int closed = 2;
+        public static final int open = 3;
+
+    }
+
+    
 }

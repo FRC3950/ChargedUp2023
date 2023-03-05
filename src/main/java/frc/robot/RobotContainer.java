@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -23,9 +24,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.*;
@@ -66,14 +69,19 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
-    private final Arm a_Arm = new Arm();
+    private final ArmSubsystem a_Arm = new ArmSubsystem();
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
+    private final Command a = a_Arm.zeroSensorFalcons();
+    
 
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+
+
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,6 +106,15 @@ public class RobotContainer {
         createAllAutoPathCommandsBasedOnPathDirectory();
         autoChooser.addOption("Example S Curve", exampleAuto);
         SmartDashboard.putData("Auto Selection", autoChooser);
+
+       
+        SmartDashboard.putData(a_Arm);
+        SmartDashboard.putData("Akjkjtuo Balance", balanceCommand);
+        SmartDashboard.putData("Move arm to pos", new InstantCommand(() -> a_Arm.moveArmToPostionCommand()));
+
+
+
+
 
     }
 
