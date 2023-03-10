@@ -101,9 +101,9 @@ public class RobotContainer {
                         () -> robotCentric.getAsBoolean()));
 
 
-       s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> manipulate.getRawAxis(5)));
-       // s_Arm.setDefaultCommand(new ArmPercentCommand(s_Arm, () -> manipulate.getRawAxis(4)));
-        s_Wrist.setDefaultCommand(new WristPercentCommand(s_Wrist, () -> manipulate.getRawAxis(1)));
+       s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> -1 *manipulate.getRawAxis(5)));
+       s_Arm.setDefaultCommand(new ArmPercentCommand(s_Arm, () -> -0.8 * manipulate.getRawAxis(1)));
+        s_Wrist.setDefaultCommand(new WristPercentCommand(s_Wrist, () ->  -0.7*manipulate.getRawAxis(4)));
 
         // Configure the button bindings
         configureButtonBindings();

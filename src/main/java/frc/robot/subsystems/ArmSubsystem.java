@@ -76,7 +76,6 @@ public class ArmSubsystem extends SubsystemBase {
 
 
     masterArm.set(ControlMode.Position, targetPosition);
-
     //masterArm.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.05);
 
   }
@@ -137,6 +136,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void setMotors(double t){
     masterArm.set(t);
   }
+  
 
   @Override
   public void periodic() {
@@ -153,7 +153,9 @@ public class ArmSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("Solenoid state", (getSolenoid().equals(Value.kForward)));
     }
     
-
+    if(isLimitSwithEngaged()){
+      zeroSensorFalcons();
+    }
   }
 
 }

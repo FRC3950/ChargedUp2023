@@ -50,6 +50,10 @@ public class Wrist extends SubsystemBase {
     return wrist.getSelectedSensorPosition();
   }
 
+  public boolean isLimitSwithEngaged(){
+    return wrist.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+  }
+
   /**
    * 
    * @return double array {kP, kI, kD, kF}
@@ -65,7 +69,7 @@ public class Wrist extends SubsystemBase {
       kI = SmartDashboard.getNumber("Wrist kI", kI);
       kD = SmartDashboard.getNumber("Wrist kD", kD);
       kF = SmartDashboard.getNumber("Wrist kF", kF);
-
+      SmartDashboard.putBoolean("Wrist limit switch", isLimitSwithEngaged());
       SmartDashboard.putNumber("Wrist encoder count", getWristEncoder());
     }
   }
