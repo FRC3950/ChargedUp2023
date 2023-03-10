@@ -32,18 +32,18 @@ public class TelescopeBangBang extends CommandBase {
   @Override
   public void execute() {
     //System.out.println(percent.getAsDouble());
-    if(percent.getAsDouble() > 0.2 || percent.getAsDouble() < -0.2){
-      if(!s_Telescope.getBrake().equals(Value.kForward)){
-        s_Telescope.setBrake(Value.kForward);
+    if(percent.getAsDouble() > 0.0 || percent.getAsDouble() < -0.0){
+      if(!s_Telescope.getBrake().equals(Value.kReverse)){
+        s_Telescope.setBrake(Value.kReverse);
       }
       s_Telescope.setPercent(percent.getAsDouble());
     }
     else {
-      s_Telescope.setBrake(Value.kReverse);
+      s_Telescope.setBrake(Value.kForward);
       s_Telescope.setPercent(0.0);
     }
   }
-
+//Josh Wrote this part of the code and it will work perfectly. I think...
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {

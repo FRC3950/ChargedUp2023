@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,10 +25,11 @@ public class ArmSubsystem extends SubsystemBase {
   private final WPI_TalonFX masterArm = new WPI_TalonFX(Constants.kArm.UpperArm);
   private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm);
   private final Encoder encoder = new Encoder(0, 1);
+  private boolean isInInfoMode = true;
   private final DoubleSolenoid armLock = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kLock.closed,
       Constants.kLock.open);
 
-  // Notes:
+  // Notes:re
   // Encoder -> 0a, 1b
   // Limit Switch Falcon (5)
   // Lock -> 2 closed, 3 open
@@ -35,16 +37,16 @@ public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ArmSubsystem. */
   public ArmSubsystem() {
 
-SmartDashboard.putNumber("Arm kF", 0.00);
-SmartDashboard.putNumber("Arm kP", 0.0); 
-SmartDashboard.putNumber("Arm kI", 0.0);
+    SmartDashboard.putNumber("Arm kF", 0.00);
+    SmartDashboard.putNumber("Arm kP", 0.0); 
+    SmartDashboard.putNumber("Arm kI", 0.0);
 
-SmartDashboard.putNumber("Arm kD", 0.0);
+    SmartDashboard.putNumber("Arm kD", 0.0);
 
-SmartDashboard.putNumber("mm_Accel", 2000);
-SmartDashboard.putNumber("mm_Vel", 2000);
+    SmartDashboard.putNumber("mm_Accel", 2000);
+    SmartDashboard.putNumber("mm_Vel", 2000);
 
-SmartDashboard.putNumber("targetPosition", 0);
+    SmartDashboard.putNumber("targetPosition", 0);
 
 
     encoder.reset();
@@ -72,7 +74,10 @@ SmartDashboard.putNumber("targetPosition", 0);
 
     double targetPosition = SmartDashboard.getNumber("targetPosition", 0);
 
-    masterArm.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.05);
+
+    masterArm.set(ControlMode.Position, targetPosition);
+
+    //masterArm.set(ControlMode.MotionMagic, targetPosition, DemandType.ArbitraryFeedForward, 0.05);
 
   }
 
@@ -84,18 +89,32 @@ SmartDashboard.putNumber("targetPosition", 0);
         });
   }
 
-  public Command zeroSensorFalcons() {
-
-    return runOnce(
-        () -> {
-
-          masterArm.setSelectedSensorPosition(0);
-          slaveArm.setSelectedSensorPosition(0);
-
-        });
+  public void armPercentCommand(double percent){
+    masterArm.set(percent);
   }
 
-  public Command lockArm() {
+  public Command zeroSensorFalcons() {
+    return runOnce(
+      () -> {
+        masterArm.setSelectedSensorPosition(0);
+        slaveArm.setSelectedSensorPosition(0);
+      }
+    );
+  }
+
+  public void lockArm(){
+    armLock.set(Value.kForward); //FIXME
+  }
+
+  public void unlockArm(){
+    armLock.set(Value.kReverse);
+  }
+
+  public DoubleSolenoid.Value getSolenoid(){
+    return armLock.get();
+  }
+
+  public Command toggleArm() {
     return runOnce(
         () -> {
           armLock.toggle();
@@ -103,21 +122,37 @@ SmartDashboard.putNumber("targetPosition", 0);
   }
 
   public boolean isLimitSwithEngaged() {
-    return masterArm.getSensorCollection().isFwdLimitSwitchClosed() == 1 ? true : false;
+    return masterArm.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+  }
+
+  public void resetEncoderCountArmMotors(){
+    masterArm.setSelectedSensorPosition(0);
+    slaveArm.setSelectedSensorPosition(0) ;
+  }
+
+  public double getArmEcnoderAngle(){
+    return encoder.getDistance(); 
+  }
+
+  public void setMotors(double t){
+    masterArm.set(t);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(isInInfoMode){
+      SmartDashboard.putBoolean("Limit Switch Engaged", isLimitSwithEngaged());
+      SmartDashboard.putNumber("angle", encoder.getDistance());
+      SmartDashboard.putNumber("Encoder Rate", encoder.getRate());
+      SmartDashboard.putNumber("Limit Switch value", masterArm.getSensorCollection().isFwdLimitSwitchClosed());
+      SmartDashboard.putNumber("Limit Rev Switch value", masterArm.getSensorCollection().isRevLimitSwitchClosed());
+      SmartDashboard.putNumber("Encoder Distance per Pulse", encoder.getDistancePerPulse());
+      SmartDashboard.putNumber("Master Interal Encoder Count", masterArm.getSelectedSensorPosition());
 
-    SmartDashboard.putBoolean("Limit Switch Engaged", isLimitSwithEngaged());
-    SmartDashboard.putNumber("angle", encoder.getDistance());
-    SmartDashboard.putNumber("Encoder Rate", encoder.getRate());
-    SmartDashboard.putNumber("Limit Switch value", masterArm.getSensorCollection().isFwdLimitSwitchClosed());
-    SmartDashboard.putNumber("Limit Rev Switch value", masterArm.getSensorCollection().isRevLimitSwitchClosed());
-    SmartDashboard.putNumber("Encoder Distance per Pulse", encoder.getDistancePerPulse());
-
-    SmartDashboard.putNumber("Master Interal Encoder Count", masterArm.getSelectedSensorPosition());
+      SmartDashboard.putBoolean("Solenoid state", (getSolenoid().equals(Value.kForward)));
+    }
+    
 
   }
 

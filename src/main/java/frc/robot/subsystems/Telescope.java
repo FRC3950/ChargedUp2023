@@ -25,6 +25,8 @@ public class Telescope extends SubsystemBase {
   public Telescope() {
     setEncoder(0);
     leader.setNeutralMode(NeutralMode.Brake);
+    leader.setInverted(true);
+    
   }
 
   public void setEncoder(int count){
