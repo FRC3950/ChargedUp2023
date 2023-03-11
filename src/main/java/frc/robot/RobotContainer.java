@@ -69,12 +69,16 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
-    private final ArmSubsystem a_Arm = new ArmSubsystem();
+    private final ArmSubsystem s_Arm = new ArmSubsystem();
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
-    private final Command a = a_Arm.zeroSensorFalcons();
+    private final Command a = s_Arm.zeroSensorFalcons();
+
+    private final SequentialCommandGroup armToAngle = new ArmToAngleGroup(s_Arm);
+
+    
     
 
     /* Auto Commands */
@@ -97,7 +101,9 @@ public class RobotContainer {
                         () -> robotCentric.getAsBoolean()));
 
 
-        s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> manipulate.getRawAxis(1)));
+       s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> -1 *manipulate.getRawAxis(5)));
+       s_Arm.setDefaultCommand(new ArmPercentCommand(s_Arm, () -> -0.8 * manipulate.getRawAxis(1)));
+        s_Wrist.setDefaultCommand(new WristPercentCommand(s_Wrist, () ->  -0.7*manipulate.getRawAxis(4)));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -108,13 +114,18 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Selection", autoChooser);
 
        
-        SmartDashboard.putData(a_Arm);
+        SmartDashboard.putData(s_Arm);
         SmartDashboard.putData("Akjkjtuo Balance", balanceCommand);
-        SmartDashboard.putData("Move arm to pos", new InstantCommand(() -> a_Arm.moveArmToPostionCommand()));
+        SmartDashboard.putData("Move arm to pos", new InstantCommand(() -> s_Arm.moveArmToPostionCommand()));
 
+        SmartDashboard.putData("lock arm", new InstantCommand(s_Arm::lockArm));
+        SmartDashboard.putData("open arm",new InstantCommand(s_Arm::unlockArm));
 
+        SmartDashboard.putData("reset Encoders For Arm", new InstantCommand(s_Arm::resetEncoderCountArmMotors));
 
+        SmartDashboard.putData("toggle telescope brake", new InstantCommand(s_Telescope::toggleBrake));
 
+        SmartDashboard.putData("RiseArm", armToAngle);
 
     }
 
@@ -135,17 +146,10 @@ public class RobotContainer {
         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
             .whileTrue(balanceCommand);
 
-        // new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        //     .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+         new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+             .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
 
-        new JoystickButton(driver, XboxController.Button.kX.value)
-            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
         
-        new JoystickButton(driver, XboxController.Button.kY.value)
-            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.75), () -> s_Intake.setIntake(0.0), s_Intake));
-        
-        new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-            .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
 
            
 
@@ -171,6 +175,15 @@ public class RobotContainer {
         new JoystickButton(manipulate, XboxController.Button.kA.value)
             .onTrue(new WristPIDCommand(s_Wrist, Constants.kIntake.encoderLimit)
         );
+        new JoystickButton(manipulate, XboxController.Button.kX.value)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
+        
+        new JoystickButton(manipulate, XboxController.Button.kY.value)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.75), () -> s_Intake.setIntake(0.0), s_Intake));
+        
+        new JoystickButton(manipulate, XboxController.Button.kRightBumper.value)
+            .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
+
     }
 
     /**

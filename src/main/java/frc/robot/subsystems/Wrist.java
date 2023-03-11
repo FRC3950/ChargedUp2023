@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +26,8 @@ public class Wrist extends SubsystemBase {
       SmartDashboard.putNumber("Wrist kD", kD);
       SmartDashboard.putNumber("Wrist kF", kF);
     }
+    wrist.setInverted(true);
+    wrist.setNeutralMode(NeutralMode.Brake);
   }
 
   /**
@@ -47,6 +50,10 @@ public class Wrist extends SubsystemBase {
     return wrist.getSelectedSensorPosition();
   }
 
+  public boolean isLimitSwithEngaged(){
+    return wrist.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+  }
+
   /**
    * 
    * @return double array {kP, kI, kD, kF}
@@ -62,6 +69,8 @@ public class Wrist extends SubsystemBase {
       kI = SmartDashboard.getNumber("Wrist kI", kI);
       kD = SmartDashboard.getNumber("Wrist kD", kD);
       kF = SmartDashboard.getNumber("Wrist kF", kF);
+      SmartDashboard.putBoolean("Wrist limit switch", isLimitSwithEngaged());
+      SmartDashboard.putNumber("Wrist encoder count", getWristEncoder());
     }
   }
 }
