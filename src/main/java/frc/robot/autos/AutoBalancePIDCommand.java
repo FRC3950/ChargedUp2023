@@ -19,9 +19,9 @@ public class AutoBalancePIDCommand extends PIDCommand {
   public AutoBalancePIDCommand(Swerve swerve) {
     super(
         // The controller that the command will use
-        new PIDController(0.05, 0, 0),
+        new PIDController(0.025, 0, 0),
         // This should return the measurement
-        swerve::getPitch,
+        swerve::getRoll,
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output

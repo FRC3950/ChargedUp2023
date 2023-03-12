@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.robot.autos.AutoBalancePIDCommand;
 import frc.robot.Constants;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,7 +25,11 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
@@ -47,6 +52,17 @@ public class Swerve extends SubsystemBase {
     public Command driveHorizontalCommand(){
 
         return this.runEnd(()-> this.driveHorizontal(SmartDashboard.getNumber("horizontalSpeed_SD", 0.25)), ()-> this.driveHorizontal(0.0));
+    }
+    
+
+    public SequentialCommandGroup driveAndAutoAlignOnBeam(){
+
+        return new SequentialCommandGroup(
+            new RunCommand( () -> this.driveHorizontal(.25), this),
+            new WaitUntilCommand(() -> this.getPitch() > 3 || this.getPitch() < -3).withTimeout(3),
+            new AutoBalancePIDCommand(this)
+
+        );
     }
     
 
@@ -120,6 +136,10 @@ public class Swerve extends SubsystemBase {
         return gyro.getPitch();
     }
 
+    public double getRoll() {
+        return gyro.getRoll();
+    }
+
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
     }
@@ -165,6 +185,7 @@ public class Swerve extends SubsystemBase {
                 SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
             }
             SmartDashboard.putNumber("Pitch", getPitch());
+            SmartDashboard.putNumber("Swerve: Roll", getRoll());
         }
     }
 ;}

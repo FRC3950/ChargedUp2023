@@ -47,6 +47,9 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
 
+    //Test Variables
+    double armAngle = 200;
+
     /* Controllers */
     private final Joystick driver = new Joystick(0);
     private final Joystick manipulate = new Joystick(1);
@@ -60,9 +63,7 @@ public class RobotContainer {
     /* Driver Buttons */
     private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-    private final JoystickButton startHorizontalDrive = new JoystickButton(driver, XboxController.Button.kBack.value);
-
-    //private final JoystickButton testButton = new JoystickButton(buttonBox, 12);
+    private final JoystickButton startCenteringDrive = new JoystickButton(driver, XboxController.Button.kBack.value);
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
@@ -76,13 +77,14 @@ public class RobotContainer {
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
     private final Command a = s_Arm.zeroSensorFalcons();
 
-    private final SequentialCommandGroup armToAngle = new ArmToAngleGroup(s_Arm);
+    private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
+    private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
+
 
     
-    
-
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+
 
 
 
@@ -101,31 +103,58 @@ public class RobotContainer {
                         () -> robotCentric.getAsBoolean()));
 
 
-       s_Telescope.setDefaultCommand(new TelescopeBangBang(s_Telescope, () -> -1 *manipulate.getRawAxis(5)));
-       s_Arm.setDefaultCommand(new ArmPercentCommand(s_Arm, () -> -0.8 * manipulate.getRawAxis(1)));
-        s_Wrist.setDefaultCommand(new WristPercentCommand(s_Wrist, () ->  -0.7*manipulate.getRawAxis(4)));
+        s_Telescope.setDefaultCommand(
+            new TelescopeBangBang(
+                s_Telescope,
+                () -> -1.0 * manipulate.getRawAxis(5) * manipulate.getRawAxis(5) * Math.signum(manipulate.getRawAxis(5)) 
+                 //() -> -1 *manipulate.getRawAxis(5)
+                 )
+                 );
+
+        s_Arm.setDefaultCommand(
+            new ArmPercentCommand(
+                s_Arm,
+                 () -> -0.8 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
+                 )
+                 );
+
+        s_Wrist.setDefaultCommand(
+            new WristPercentCommand(
+                s_Wrist,
+
+                () -> Math.abs(manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value)) > Math.abs(manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)) ? 
+               0.8 * manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value) : 
+               0.8 * -manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)
+
+                //() -> -0.8 * manipulate.getRawAxis(4) * manipulate.getRawAxis(4) * Math.signum(manipulate.getRawAxis(4)) 
+
+                
+                //() ->  -0.7*manipulate.getRawAxis(4)
+                 )
+                 );
 
         // Configure the button bindings
         configureButtonBindings();
 
         // Autochooser
+        //autoChooser.addOption("Example S Curve", exampleAuto);
+
         createAllAutoPathCommandsBasedOnPathDirectory();
-        autoChooser.addOption("Example S Curve", exampleAuto);
+
+
         SmartDashboard.putData("Auto Selection", autoChooser);
 
-       
         SmartDashboard.putData(s_Arm);
         SmartDashboard.putData("Akjkjtuo Balance", balanceCommand);
-        SmartDashboard.putData("Move arm to pos", new InstantCommand(() -> s_Arm.moveArmToPostionCommand()));
 
-        SmartDashboard.putData("lock arm", new InstantCommand(s_Arm::lockArm));
-        SmartDashboard.putData("open arm",new InstantCommand(s_Arm::unlockArm));
+        SmartDashboard.putData("Lock Arm (Manual)", new InstantCommand(s_Arm::lockArm));
+        SmartDashboard.putData("Unlock Arm (Manual)",new InstantCommand(s_Arm::unlockArm));
 
-        SmartDashboard.putData("reset Encoders For Arm", new InstantCommand(s_Arm::resetEncoderCountArmMotors));
+        SmartDashboard.putData("Reset Mag Enocder", new InstantCommand(s_Arm::resetEncoderCountArmMotors));
 
-        SmartDashboard.putData("toggle telescope brake", new InstantCommand(s_Telescope::toggleBrake));
+        SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
+        SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
 
-        SmartDashboard.putData("RiseArm", armToAngle);
 
     }
 
@@ -139,9 +168,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        //testButton.onTrue(new InstantCommand(() -> System.out.println("Button pressed")));
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro())); //Button this way might be 'safer' since the button is private/final when defined outside the constructor. 
-        //Honestly not sure what the best practice is or if it matters. Probably would never collide if we kept it public/changeable... idk?
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro())); //Button this way might be 'safer' since the button is private/final when defined outside the constructor. //Honestly not sure what the best practice is or if it matters. Probably would never collide if we kept it public/changeable... idk?
 
         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
             .whileTrue(balanceCommand);
@@ -153,28 +180,13 @@ public class RobotContainer {
 
            
 
-        startHorizontalDrive.whileTrue(s_Swerve.driveHorizontalCommand());
+        startCenteringDrive.whileTrue(s_Swerve.driveHorizontalCommand());
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
         new JoystickButton(driver, XboxController.Button.kA.value)
             .whileTrue(s_Swerve.turnToZeroCommand());
 
-       
-        // new JoystickButton(manipulate, XboxController.Button.kA.value)
-        //     .whileTrue(new PIDCommand(
-        //         new PIDController(s_Wrist.getPIDDashboardConstants()[0], s_Wrist.getPIDDashboardConstants()[1], s_Wrist.getPIDDashboardConstants()[2]), 
-        //         s_Wrist::getWristEncoder, 
-        //         () -> Constants.kIntake.encoderLimit, 
-        //         (output) -> {s_Wrist.setSpeed(output);}, s_Wrist
-        //     )
-        // ); Example of an inline PID command 
 
-        new JoystickButton(manipulate, XboxController.Button.kB.value)
-            .onTrue(new WristPIDCommand(s_Wrist, 0)
-        );
-        new JoystickButton(manipulate, XboxController.Button.kA.value)
-            .onTrue(new WristPIDCommand(s_Wrist, Constants.kIntake.encoderLimit)
-        );
         new JoystickButton(manipulate, XboxController.Button.kX.value)
             .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
         

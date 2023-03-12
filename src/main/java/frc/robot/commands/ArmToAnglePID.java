@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import java.lang.Math;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -26,12 +27,13 @@ public class ArmToAnglePID extends PIDCommand {
         output -> {
           // Use the output here
           arm.setMotors(output + 0.18);
+          arm.setMotors(output + (0.18 * Math.sin(Math.toRadians(arm.getArmEcnoderAngle()/2.4))));
 
         }, arm);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
 
-      getController().setTolerance(10);
+      getController().setTolerance(10); //Roughly 3.5ish degrees
   }
 
   // Returns true when the command should end.

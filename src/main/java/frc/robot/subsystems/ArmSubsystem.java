@@ -80,13 +80,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   }
 
-  public Command moveArmToPostionCommand() {
 
-    return runOnce(
-        () -> {
-          this.armToAngle();
-        });
-  }
 
   public void armPercentCommand(double percent){
     masterArm.set(percent);
@@ -154,7 +148,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
     
     if(isLimitSwithEngaged()){
-      zeroSensorFalcons();
+      encoder.reset();
     }
   }
 
