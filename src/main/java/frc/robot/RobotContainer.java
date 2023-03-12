@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -72,6 +75,22 @@ public class RobotContainer {
     private final Wrist s_Wrist = new Wrist();
     private final ArmSubsystem s_Arm = new ArmSubsystem();
 
+    /* PathPlanner */
+    HashMap<String, Command> eventMap = new HashMap<>();
+
+    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        s_Swerve::getPose, // Pose2d supplier
+        s_Swerve::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
+        Constants.kSwerve.swerveKinematics,
+        new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(1.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+        s_Swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
+        eventMap,
+        true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+        s_Swerve // The drive subsystem. Used to properly set the requirements of path following commands
+    );
+
+
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
@@ -84,6 +103,8 @@ public class RobotContainer {
     
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("auto_DriveToCone", 3, 3));
+
 
 
 
