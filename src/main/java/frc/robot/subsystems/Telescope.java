@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -20,13 +23,27 @@ public class Telescope extends SubsystemBase {
   /** Creates a new Telescope. */
   private final WPI_TalonFX leader = new WPI_TalonFX(Constants.kTelescope.leader);
   private final DoubleSolenoid brake = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kTelescope.forward, Constants.kTelescope.reverse);
-  private boolean isInInfoMode = false;
+  private boolean isInInfoMode = true;
 
   public Telescope() {
     setEncoder(0);
     leader.setNeutralMode(NeutralMode.Brake);
     leader.setInverted(true);
+
+    leader.config_kP(0, 0);
+    leader.configAllowableClosedloopError(0, 20);
     
+  }
+
+  //Needs Tuner to Find Extension Distance
+  // 0.75 x 1023   /  (max distance)
+  // Let's make sure sensor is in correct phase and + makes it extend in tuner!
+  public Command extendArmToDistance_Command(double distance) {
+    return new StartEndCommand(
+        () -> {
+          this.leader.set(ControlMode.Position, distance);},
+        () -> this.leader.set(0),
+        this);
   }
 
   public void setEncoder(int count){
@@ -38,7 +55,7 @@ public class Telescope extends SubsystemBase {
   }
 
   public void setMotor(double count){
-    leader.set(ControlMode.Position, count); //not sure if this is ideal
+    leader.set(ControlMode.Position, count); //not sure if this is ideal  <- Bridgwood: it is if we have the right PID :)
   }
 
   public void setPercent(double speed){
@@ -65,7 +82,20 @@ public class Telescope extends SubsystemBase {
   @Override
   public void periodic() {
     if(isInInfoMode){
-      SmartDashboard.putNumber("Telescope encoder count", getEncoder());
+      SmartDashboard.putNumber("Telescope: Encoder Count", getEncoder());
+      SmartDashboard.putNumber("Telescope: Is Fwd Limit Switch Closed", leader.getSensorCollection().isFwdLimitSwitchClosed());
+      SmartDashboard.putNumber("Telescope: Is Rev Limit Switch Closed", leader.getSensorCollection().isRevLimitSwitchClosed());
+
+      
     }
+
+
+    //Uncomment once we know what the limit switch is and what value represents closed.
+
+    // if(leader.getSensorCollection().isFwdLimitSwitchClosed() == 1){
+    //   setEncoder(0);
+    // }
+    
+
   }
 }
