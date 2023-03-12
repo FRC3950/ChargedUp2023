@@ -25,7 +25,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -57,9 +59,14 @@ public class Swerve extends SubsystemBase {
 
     public SequentialCommandGroup driveAndAutoAlignOnBeam(){
 
+        //might need the first 2 to be racing each other.
         return new SequentialCommandGroup(
-            new RunCommand( () -> this.driveHorizontal(.25), this),
-            new WaitUntilCommand(() -> this.getPitch() > 3 || this.getPitch() < -3).withTimeout(3),
+
+        new ParallelRaceGroup(
+            new InstantCommand( () -> this.driveHorizontal(.25), this),
+            new WaitUntilCommand(() -> this.getPitch() > 3 || this.getPitch() < -3).withTimeout(4)
+        ),
+           
             new AutoBalancePIDCommand(this)
 
         );
