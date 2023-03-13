@@ -29,12 +29,31 @@ public class ArmPercentCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(percent.getAsDouble() > 0.1 || percent.getAsDouble() < -0.1){
-      if(!arm.getSolenoid().equals(Value.kReverse)){
+
+    if (percent.getAsDouble() > 0.1 || percent.getAsDouble() < -0.1) {
+      if (!arm.getSolenoid().equals(Value.kReverse)) {
         arm.unlockArm();
-        arm.armPercentCommand(percent.getAsDouble());
+
       }
+
+      if (percent.getAsDouble() < -0.1) {
+        arm.armPercentCommand(percent.getAsDouble() * 0.15);
+
+      }
+
+      if (percent.getAsDouble() > 0.1)
+      {
+        if(arm.getArmEcnoderAngle() < 280){
+          arm.armPercentCommand(percent.getAsDouble());
+        }
+        else{
+          arm.armPercentCommand(0);
+        }
+
+      } 
+      
     }
+    
     
     else {
       arm.lockArm();

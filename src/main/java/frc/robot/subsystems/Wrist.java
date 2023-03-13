@@ -32,7 +32,7 @@ public class Wrist extends SubsystemBase {
     wrist.setInverted(true);
     wrist.setNeutralMode(NeutralMode.Brake);
     wrist.config_kP(0, kP);
-    wrist.configAllowableClosedloopError(0, 100);  //allowable error or not to keep motor goin
+    wrist.configAllowableClosedloopError(0, 200);  //allowable error or not to keep motor goin
   }
 
   public Command moveWristToPosition_Command(double distance) {
@@ -62,7 +62,7 @@ public class Wrist extends SubsystemBase {
   }
 
   public boolean isLimitSwithEngaged(){
-    return wrist.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+    return wrist.getSensorCollection().isRevLimitSwitchClosed() == 1;
   }
 
   /**

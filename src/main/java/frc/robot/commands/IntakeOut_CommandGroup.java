@@ -22,12 +22,13 @@ public class IntakeOut_CommandGroup extends SequentialCommandGroup {
 
 
 //1. 
-      new ArmToAngleGroup(arm, 20),
+      new ArmToAngleGroup(arm, 62),
 
 //2. 
       new ParallelCommandGroup(
-        wrist.moveWristToPosition_Command(0),
-        telescope.extendArmToDistance_Command(0)
+        //0.0252 pid wrist
+        wrist.moveWristToPosition_Command(30400),
+        telescope.extendArmToDistance_Command(59119)
 
         // We Must be sure that 0 for wrist is top and limit engaged
         // And 0 for arm is retracted and limit engaged

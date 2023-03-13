@@ -80,7 +80,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   }
 
+  public Command moveArmToPostionCommand() {
 
+    return runOnce(
+        () -> {
+          this.armToAngle();
+        });
+  }
 
   public void armPercentCommand(double percent){
     masterArm.set(percent);
@@ -115,7 +121,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public boolean isLimitSwithEngaged() {
-    return masterArm.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+    return masterArm.getSensorCollection().isRevLimitSwitchClosed() == 1;
   }
 
   public void resetEncoderCountArmMotors(){

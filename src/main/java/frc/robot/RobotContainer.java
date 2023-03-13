@@ -135,7 +135,7 @@ public class RobotContainer {
         s_Arm.setDefaultCommand(
             new ArmPercentCommand(
                 s_Arm,
-                 () -> -0.8 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
+                 () -> -0.75 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
                  )
                  );
 
@@ -175,6 +175,8 @@ public class RobotContainer {
 
         SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
         SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
+
+       // SmartDashboard.putData("Go to intake", new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake));
 
 
     }

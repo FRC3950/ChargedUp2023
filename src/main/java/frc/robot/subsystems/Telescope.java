@@ -30,8 +30,8 @@ public class Telescope extends SubsystemBase {
     leader.setNeutralMode(NeutralMode.Brake);
     leader.setInverted(true);
 
-    leader.config_kP(0, 0);
-    leader.configAllowableClosedloopError(0, 20);
+    leader.config_kP(0, 0.012978);
+    leader.configAllowableClosedloopError(0, 590);
     
   }
 
@@ -83,18 +83,16 @@ public class Telescope extends SubsystemBase {
   public void periodic() {
     if(isInInfoMode){
       SmartDashboard.putNumber("Telescope: Encoder Count", getEncoder());
-      SmartDashboard.putNumber("Telescope: Is Fwd Limit Switch Closed", leader.getSensorCollection().isFwdLimitSwitchClosed());
-      SmartDashboard.putNumber("Telescope: Is Rev Limit Switch Closed", leader.getSensorCollection().isRevLimitSwitchClosed());
+   
 
       
     }
 
 
-    //Uncomment once we know what the limit switch is and what value represents closed.
 
-    // if(leader.getSensorCollection().isFwdLimitSwitchClosed() == 1){
-    //   setEncoder(0);
-    // }
+    if(leader.getSensorCollection().isRevLimitSwitchClosed() == 1){
+      setEncoder(0);
+    }
     
 
   }
