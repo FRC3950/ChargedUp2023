@@ -12,7 +12,13 @@
       "/SmartDashboard/Akjkjtuo Balance": "Command",
       "/SmartDashboard/ArmSubsystem": "Subsystem",
       "/SmartDashboard/Auto Selection": "String Chooser",
-      "/SmartDashboard/Move arm to pos": "Command"
+      "/SmartDashboard/Go to intake": "Command",
+      "/SmartDashboard/Lock Arm (Manual)": "Command",
+      "/SmartDashboard/Move arm to pos": "Command",
+      "/SmartDashboard/Reset Mag Enocder": "Command",
+      "/SmartDashboard/Rise Arm To High Angle": "Command",
+      "/SmartDashboard/Rise Arm To Mid Angle": "Command",
+      "/SmartDashboard/Unlock Arm (Manual)": "Command"
     },
     "windows": {
       "/FMSInfo": {
@@ -50,9 +56,6 @@
   },
   "NetworkTables Info": {
     "Connections": {
-      "open": true
-    },
-    "Server": {
       "open": true
     },
     "visible": true

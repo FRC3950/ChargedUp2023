@@ -15,7 +15,7 @@ import frc.robot.Constants;
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
-  private double kP = 0.0, kI = 0.0, kD = 0.0, kF = 0.0;
+  private double kP = 0.0152, kI = 0.0, kD = 0.0, kF = 0.0;
   private boolean isInInfoMode = true;
   public final double kWristDropPosition = 0;
   public final double kWristRestPosition = 0;
@@ -32,7 +32,7 @@ public class Wrist extends SubsystemBase {
     wrist.setInverted(true);
     wrist.setNeutralMode(NeutralMode.Brake);
     wrist.config_kP(0, kP);
-    wrist.configAllowableClosedloopError(0, 200);  //allowable error or not to keep motor goin
+    wrist.configAllowableClosedloopError(0, 300);  //allowable error or not to keep motor goin
   }
 
   public Command moveWristToPosition_Command(double distance) {

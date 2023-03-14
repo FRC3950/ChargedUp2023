@@ -98,7 +98,7 @@ public class RobotContainer {
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
-
+    private final SequentialCommandGroup goToIntakePosition = new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
 
     
     /* Auto Commands */
@@ -144,8 +144,8 @@ public class RobotContainer {
                 s_Wrist,
 
                 () -> Math.abs(manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value)) > Math.abs(manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)) ? 
-               0.8 * manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value) : 
-               0.8 * -manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)
+               0.3 * manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value) : 
+               0.6 * -manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)
 
                 //() -> -0.8 * manipulate.getRawAxis(4) * manipulate.getRawAxis(4) * Math.signum(manipulate.getRawAxis(4)) 
 
@@ -176,7 +176,7 @@ public class RobotContainer {
         SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
         SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
 
-       // SmartDashboard.putData("Go to intake", new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake));
+       SmartDashboard.putData("Go to intake",goToIntakePosition);
 
 
     }

@@ -27,11 +27,11 @@ public class RestMode_CommandGroup extends SequentialCommandGroup {
         // And 0 for arm is retracted and limit engaged
         //The phases must be RIGHT
 
-        ).withTimeout(3),
+        ).withTimeout(2),
 
 //2. 
         new ParallelCommandGroup(
-          new ArmToAngleGroup(null, 0),
+          new ArmToAngleGroup(arm, 0),
           wrist.moveWristToPosition_Command(0),
           telescope.extendArmToDistance_Command(0)
 

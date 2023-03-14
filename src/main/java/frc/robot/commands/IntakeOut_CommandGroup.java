@@ -22,7 +22,7 @@ public class IntakeOut_CommandGroup extends SequentialCommandGroup {
 
 
 //1. 
-      new ArmToAngleGroup(arm, 62),
+      new ArmToAngleGroup(arm, 62).withTimeout(0),
 
 //2. 
       new ParallelCommandGroup(
@@ -38,9 +38,9 @@ public class IntakeOut_CommandGroup extends SequentialCommandGroup {
 
 //3. 
         new ParallelCommandGroup(
-          new ArmToAngleGroup(null, 0),
-          wrist.moveWristToPosition_Command(0),
-          telescope.extendArmToDistance_Command(0)
+          new ArmToAngleGroup(arm, 62),
+          wrist.moveWristToPosition_Command(30400),
+          telescope.extendArmToDistance_Command(59119)
 
         ).withTimeout(2),
 
