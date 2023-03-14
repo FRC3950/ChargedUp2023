@@ -100,9 +100,21 @@ public class RobotContainer {
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
     private final SequentialCommandGroup goToIntakePosition = new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
 
+
+    private final SequentialCommandGroup armTo_0 = new ArmToAngleGroup(s_Arm, 0 );
+    private final SequentialCommandGroup armTo_50 = new ArmToAngleGroup(s_Arm, 50);
+    private final SequentialCommandGroup armTo_100 = new ArmToAngleGroup(s_Arm, 100);
+    private final SequentialCommandGroup armTo_150 = new ArmToAngleGroup(s_Arm, 150);
+    private final SequentialCommandGroup armTo_200 = new ArmToAngleGroup(s_Arm, 200);
+    private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
+    private final SequentialCommandGroup armTo_275 = new ArmToAngleGroup(s_Arm, 275);
+
+
+
     
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
     Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("auto_DriveToCone", 3, 3));
 
 
@@ -160,6 +172,8 @@ public class RobotContainer {
         // Autochooser
         //autoChooser.addOption("Example S Curve", exampleAuto);
 
+       
+
         createAllAutoPathCommandsBasedOnPathDirectory();
 
 
@@ -178,6 +192,16 @@ public class RobotContainer {
 
        SmartDashboard.putData("Go to intake",goToIntakePosition);
 
+
+       //Arm to angle
+    
+        SmartDashboard.putData("Arm Move to (0) ", armTo_0);
+        SmartDashboard.putData("Arm Move to (50) ", armTo_50);
+        SmartDashboard.putData("Arm Move to (100) ", armTo_100);
+        SmartDashboard.putData("Arm Move to (150) ", armTo_150);
+        SmartDashboard.putData("Arm Move to (200) ", armTo_200);
+        SmartDashboard.putData("Arm Move to (250) ", armTo_250);
+        SmartDashboard.putData("Arm Move to (275) ", armTo_275);
 
     }
 
