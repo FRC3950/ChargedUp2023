@@ -99,6 +99,8 @@ public class RobotContainer {
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
     private final SequentialCommandGroup goToIntakePosition = new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup restmode = new RestMode_CommandGroup(s_Wrist, s_Arm, s_Telescope);
+    private final SequentialCommandGroup scoreMid = new scoreMid(s_Wrist, s_Arm, s_Telescope, s_Intake);
 
 
     private final SequentialCommandGroup armTo_0 = new ArmToAngleGroup(s_Arm, 0 );
@@ -191,17 +193,21 @@ public class RobotContainer {
         SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
 
        SmartDashboard.putData("Go to intake",goToIntakePosition);
+       SmartDashboard.putData("Rest Mode", restmode);
+       SmartDashboard.putData("Score Mid", scoreMid );
 
 
        //Arm to angle
     
         SmartDashboard.putData("Arm Move to (0) ", armTo_0);
-        SmartDashboard.putData("Arm Move to (50) ", armTo_50);
-        SmartDashboard.putData("Arm Move to (100) ", armTo_100);
+        // SmartDashboard.putData("Arm Move to (50) ", armTo_50);
+        // SmartDashboard.putData("Arm Move to (100) ", armTo_100);
         SmartDashboard.putData("Arm Move to (150) ", armTo_150);
         SmartDashboard.putData("Arm Move to (200) ", armTo_200);
         SmartDashboard.putData("Arm Move to (250) ", armTo_250);
         SmartDashboard.putData("Arm Move to (275) ", armTo_275);
+
+        SmartDashboard.putData("Intake Out", goToIntakePosition);
 
     }
 

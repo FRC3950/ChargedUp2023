@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -23,15 +24,16 @@ public class scoreMid extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-    new ArmToAngleGroup(arm, 275),
-    new ParallelCommandGroup(
-      wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
-      telescope.extendArmToDistance_Command(0)
-    ).withTimeout(1.5),
+      new ArmToAngleGroup(arm, 257),
+      new ParallelCommandGroup(
+        wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
+        telescope.extendArmToDistance_Command(22535)
+      ).withTimeout(1.5),
+      new InstantCommand(() -> intake.setIntake(-0.3)),
+      //new InstantCommand(intake::toggleSolenoid), //Only use for auto
 
-    new InstantCommand(intake::toggleSolenoid), //Only use for auto
-
-    new WaitCommand(0.3)
+      new WaitCommand(0.5),
+      new InstantCommand(() -> intake.setIntake(0))
 
     );
   }

@@ -30,8 +30,8 @@ public class Telescope extends SubsystemBase {
     leader.setNeutralMode(NeutralMode.Brake);
     leader.setInverted(true);
 
-    leader.config_kP(0, 0.012978);
-    leader.configAllowableClosedloopError(0, 590);
+    leader.config_kP(0, 0.013978);
+    leader.configAllowableClosedloopError(0, 300);
     
   }
 
@@ -41,8 +41,13 @@ public class Telescope extends SubsystemBase {
   public Command extendArmToDistance_Command(double distance) {
     return new StartEndCommand(
         () -> {
-          this.leader.set(ControlMode.Position, distance);},
-        () -> this.leader.set(0),
+          this.setBrake(Value.kReverse);
+          this.leader.set(ControlMode.Position, distance);
+        },
+        () -> {
+          this.leader.set(0);
+          this.setBrake(Value.kForward);
+        },
         this);
   }
 

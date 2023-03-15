@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArmSubsystem;
@@ -22,7 +23,13 @@ public class IntakeOut_CommandGroup extends SequentialCommandGroup {
 
 
 //1. 
-      new ArmToAngleGroup(arm, 62).withTimeout(0),
+      
+new ParallelCommandGroup(
+  wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
+  telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
+  new ArmToAngleGroup(arm, 62).withTimeout(2)
+
+),
 
 //2. 
       new ParallelCommandGroup(

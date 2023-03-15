@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
@@ -21,34 +22,14 @@ public class Intake extends SubsystemBase {
   private final WPI_TalonFX lower = new WPI_TalonFX(Constants.kIntake.lowerID);
   //private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
 
-  private final double kP, kI, kD, kF, kMaxSensorVelocity; //FIXME
-
   boolean isInInfoMode = false;
   // Will also need a sensor at some point. 
 
   private final DoubleSolenoid solenoid = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kIntake.forward, Constants.kIntake.reverse);
 
   public Intake() {
-    //All MotionMagic stuff with wrist will go here if we decide to use it. 
-
-    //FIXME
-    kP = 0.0;
-    kI = 0.0;
-    kD = 0.0;
-    kF = 0.0;
-
-
-    kMaxSensorVelocity = 4096 * 2;
-
-    //wrist.config_kP(0, kP);
-    //wrist.config_kI(0, kI);
-    //wrist.config_kD(0, kD);
-    //wrist.config_kF(0, kF);
-
-    //Other motion magic stuff will go here
-
-
-    //wrist.configMotionAcceleration(kMaxSensorVelocity/2, 0);
+    upper.setNeutralMode(NeutralMode.Brake);
+    lower.setNeutralMode(NeutralMode.Brake);
   }
 
   public DoubleSolenoid.Value getState(){
