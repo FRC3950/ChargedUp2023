@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ArmSubsystem extends SubsystemBase {
+public class Arm extends SubsystemBase {
 
   private final WPI_TalonFX masterArm = new WPI_TalonFX(Constants.kArm.UpperArm);
   private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm);
@@ -35,7 +35,7 @@ public class ArmSubsystem extends SubsystemBase {
   // Lock -> 2 closed, 3 open
 
   /** Creates a new ArmSubsystem. */
-  public ArmSubsystem() {
+  public Arm() {
 
     SmartDashboard.putNumber("Arm kF", 0.00);
     SmartDashboard.putNumber("Arm kP", 0.0); 

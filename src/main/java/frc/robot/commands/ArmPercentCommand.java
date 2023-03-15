@@ -8,13 +8,13 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Arm;
 
 public class ArmPercentCommand extends CommandBase {
   /** Creates a new ArmPercentCommand. */
   private final DoubleSupplier percent;
-  private final ArmSubsystem arm;
-  public ArmPercentCommand(ArmSubsystem arm, DoubleSupplier percent) {
+  private final Arm arm;
+  public ArmPercentCommand(Arm arm, DoubleSupplier percent) {
     this.arm = arm;
     this.percent = percent;
     arm.lockArm();

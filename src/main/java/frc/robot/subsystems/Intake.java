@@ -43,6 +43,9 @@ public class Intake extends SubsystemBase {
     System.out.println(newState.toString());
   }
 
+  public void setIntake(Value newState){
+    solenoid.set(newState);
+  }
  
 
   public void setIntake(double speed){

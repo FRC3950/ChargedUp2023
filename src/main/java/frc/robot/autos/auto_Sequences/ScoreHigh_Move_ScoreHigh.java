@@ -4,12 +4,16 @@
 
 package frc.robot.autos.auto_Sequences;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.autos.runPathAuto;
+import frc.robot.commands.IntakeOutCommandGroup;
 import frc.robot.commands.RestModeCommandGroup;
-import frc.robot.commands.ScoreMidCommandGroup;
+import frc.robot.commands.ScoreHighCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
@@ -19,18 +23,31 @@ import frc.robot.subsystems.Wrist;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Score_Then_Move_Right extends SequentialCommandGroup {
-  /** Creates a new Score_Then_Move_Right. */
-  public Score_Then_Move_Right(Wrist wrist, Arm arm, Telescope telescope, Intake intake, Swerve swerve) {
+public class ScoreHigh_Move_ScoreHigh extends SequentialCommandGroup {
+  /** Creates a new ScoreHigh_Move_ScoreHigh. */
+  public ScoreHigh_Move_ScoreHigh(Wrist wrist, Arm arm, Telescope telescope, Intake intake, Swerve swerve) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-
-    new ScoreMidCommandGroup(wrist, arm, telescope, intake),
-    new WaitCommand(.5),
+    new ScoreHighCommandGroup(wrist, arm, telescope, intake),
+    new WaitCommand(.25),
     new RestModeCommandGroup(wrist, arm, telescope),
     new WaitCommand(.5),
-    new runPathAuto(swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches)
+
+    new ParallelCommandGroup(
+      //1.
+      new runPathAuto(swerve, 
+      PathPlanner.loadPath(
+        "auto_DriveToCone", new PathConstraints(3, 3))),
+      //2.
+      new SequentialCommandGroup(
+          new WaitCommand(0.75), 
+          new IntakeOutCommandGroup(wrist, arm, telescope, intake).withTimeout(2),
+          new RestModeCommandGroup(wrist, arm, telescope)
+        )
+      )    
     );
+
+    
   }
 }

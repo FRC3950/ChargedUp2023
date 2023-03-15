@@ -17,7 +17,7 @@ public class Wrist extends SubsystemBase {
   private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
   private double kP = 0.0152, kI = 0.0, kD = 0.0, kF = 0.0;
   private boolean isInInfoMode = true;
-  public final double kWristDropPosition = 54729;
+  public final double kWristDropPosition = 55000;
   public final double kWristRestPosition = 0;
   public Wrist() {
     setWristEncoder(0);

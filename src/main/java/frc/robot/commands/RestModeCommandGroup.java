@@ -10,16 +10,16 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Wrist;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RestMode_CommandGroup extends SequentialCommandGroup {
+public class RestModeCommandGroup extends SequentialCommandGroup {
   /** Creates a new RestMode_CommandGroup. */
-  public RestMode_CommandGroup(Wrist wrist, ArmSubsystem arm, Telescope telescope) {
+  public RestModeCommandGroup(Wrist wrist, Arm arm, Telescope telescope) {
     addCommands(
 
 //1. 
@@ -38,7 +38,7 @@ public class RestMode_CommandGroup extends SequentialCommandGroup {
         new ParallelRaceGroup(
           new ArmToAngleGroup(arm, 0),
           new RunCommand(() ->wrist.setSpeed(-.2), wrist),
-          telescope.extendArmToDistance_Command(-5000)
+          new RunCommand(()->telescope.retractArm(0.25), telescope)
 
         ).withTimeout(2)
     );

@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Wrist;
@@ -17,19 +17,19 @@ import frc.robot.subsystems.Wrist;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class scoreMid extends SequentialCommandGroup {
+public class ScoreHighCommandGroup extends SequentialCommandGroup {
   /** Creates a new scoreMid. */
-  public scoreMid(Wrist wrist, ArmSubsystem arm, Telescope telescope, Intake intake) {
+  public ScoreHighCommandGroup(Wrist wrist, Arm arm, Telescope telescope, Intake intake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-      new ArmToAngleGroup(arm, 257),
+      new ArmToAngleGroup(arm, 280),
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
-        telescope.extendArmToDistance_Command(22535)
+        telescope.extendArmToDistance_Command(304054)
       ).withTimeout(1.5),
-      new InstantCommand(() -> intake.setIntake(-0.3)),
+      new InstantCommand(() -> intake.setIntake(-0.2)),
       //new InstantCommand(intake::toggleSolenoid), //Only use for auto
 
       new WaitCommand(0.5),

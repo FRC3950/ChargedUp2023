@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.commands.*;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -16,7 +16,7 @@ import frc.robot.commands.*;
 public class ArmToAngleGroup extends SequentialCommandGroup {
 
   /** Creates a new armtoanglegroup. */
-  public ArmToAngleGroup(ArmSubsystem arm, double angle) {
+  public ArmToAngleGroup(Arm arm, double angle) {
    
 
     // Add your commands in the addCommands() call, e.g.

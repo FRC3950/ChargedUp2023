@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.Arm;
 import java.lang.Math;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -14,7 +14,7 @@ import java.lang.Math;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmToAnglePID extends PIDCommand {
   /** Creates a new moveArmToAnglePID. */
-  public ArmToAnglePID(ArmSubsystem arm, double angle){
+  public ArmToAnglePID(Arm arm, double angle){
 
     super(
         // The controller that the command will use

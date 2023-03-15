@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
+import frc.robot.autos.auto_Sequences.ScoreHigh_Move_ScoreHigh;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -73,7 +74,7 @@ public class RobotContainer {
     private final Intake s_Intake = new Intake();
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
-    private final ArmSubsystem s_Arm = new ArmSubsystem();
+    private final Arm s_Arm = new Arm();
 
     /* PathPlanner */
     HashMap<String, Command> eventMap = new HashMap<>();
@@ -98,9 +99,12 @@ public class RobotContainer {
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
-    private final SequentialCommandGroup goToIntakePosition = new IntakeOut_CommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup restmode = new RestMode_CommandGroup(s_Wrist, s_Arm, s_Telescope);
-    private final SequentialCommandGroup scoreMid = new scoreMid(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup restmode = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
+    private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new ScoreHigh_Move_ScoreHigh(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
+    private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
 
 
     private final SequentialCommandGroup armTo_0 = new ArmToAngleGroup(s_Arm, 0 );
@@ -110,6 +114,7 @@ public class RobotContainer {
     private final SequentialCommandGroup armTo_200 = new ArmToAngleGroup(s_Arm, 200);
     private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
     private final SequentialCommandGroup armTo_275 = new ArmToAngleGroup(s_Arm, 275);
+
 
 
 
@@ -174,8 +179,6 @@ public class RobotContainer {
         // Autochooser
         //autoChooser.addOption("Example S Curve", exampleAuto);
 
-       
-
         createAllAutoPathCommandsBasedOnPathDirectory();
 
 
@@ -195,6 +198,12 @@ public class RobotContainer {
        SmartDashboard.putData("Go to intake",goToIntakePosition);
        SmartDashboard.putData("Rest Mode", restmode);
        SmartDashboard.putData("Score Mid", scoreMid );
+       SmartDashboard.putData("Score High", scoreHigh);
+       SmartDashboard.putData("Intake standing", intakeStandingPosition);
+
+       SmartDashboard.putData("Full Auto: Score High, Move, Score High", scoreHigh_Move_ScoreHigh);
+
+       SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
 
 
        //Arm to angle
