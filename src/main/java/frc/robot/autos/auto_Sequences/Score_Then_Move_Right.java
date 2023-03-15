@@ -27,7 +27,7 @@ public class Score_Then_Move_Right extends SequentialCommandGroup {
     addCommands(
 
     new scoreMid(wrist, arm, telescope, intake),
-    new WaitCommand(1),
+    new WaitCommand(.5),
     new RestMode_CommandGroup(wrist, arm, telescope),
     new WaitCommand(.5),
     new runPathAuto(swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches)
