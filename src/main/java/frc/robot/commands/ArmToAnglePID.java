@@ -18,7 +18,7 @@ public class ArmToAnglePID extends PIDCommand {
 
     super(
         // The controller that the command will use
-        new PIDController(0.005, 0, 0),
+        new PIDController(0.0035, 0, 0), //originally .005
         // This should return the measurement
         arm::getArmEcnoderAngle,
         // This should return the setpoint (can also be a constant)
@@ -26,8 +26,10 @@ public class ArmToAnglePID extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          arm.setMotors(output + 0.18);
+          //arm.setMotors(output + 0.18);
           arm.setMotors(output + (0.18 * Math.sin(Math.toRadians(arm.getArmEcnoderAngle()/2.4))));
+
+          //Should compensate for gravity  maybe
 
         }, arm);
     // Use addRequirements() here to declare subsystem dependencies.
