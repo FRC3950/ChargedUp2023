@@ -53,6 +53,10 @@ public class Intake extends SubsystemBase {
     lower.set(speed);
   }
 
+  public boolean limitIsEngaged(){
+    return lower.getSensorCollection().isFwdLimitSwitchClosed() == 1;
+  }
+
   @Override
   public void periodic() {
     if(isInInfoMode){

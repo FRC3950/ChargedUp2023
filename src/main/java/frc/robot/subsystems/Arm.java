@@ -26,8 +26,7 @@ public class Arm extends SubsystemBase {
   private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm);
   private final Encoder encoder = new Encoder(0, 1);
   private boolean isInInfoMode = true;
-  private final DoubleSolenoid armLock = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kLock.closed,
-      Constants.kLock.open);
+  private final DoubleSolenoid armLock = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kLock.closed, Constants.kLock.open);
 
   // Notes:re
   // Encoder -> 0a, 1b

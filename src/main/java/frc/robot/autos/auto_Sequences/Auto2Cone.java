@@ -23,28 +23,26 @@ import frc.robot.subsystems.Wrist;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreHigh_Move_ScoreHigh extends SequentialCommandGroup {
+public class Auto2Cone extends SequentialCommandGroup {
   /** Creates a new ScoreHigh_Move_ScoreHigh. */
-  public ScoreHigh_Move_ScoreHigh(Wrist wrist, Arm arm, Telescope telescope, Intake intake, Swerve swerve) {
+  public Auto2Cone(Wrist wrist, Arm arm, Telescope telescope, Intake intake, Swerve swerve) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-    new ScoreHighCommandGroup(wrist, arm, telescope, intake),
-    new WaitCommand(.25),
-    new RestModeCommandGroup(wrist, arm, telescope),
-    new WaitCommand(.5),
+      new ScoreHighCommandGroup(wrist, arm, telescope, intake),
+      new WaitCommand(.25),
+      // new RestModeCommandGroup(wrist, arm, telescope),
+      // new WaitCommand(.5),
 
-    new ParallelCommandGroup(
-      //1.
-      new runPathAuto(swerve, 
-      PathPlanner.loadPath(
-        "auto_DriveToCone", new PathConstraints(3, 3))),
-      //2.
-      new SequentialCommandGroup(
-          new WaitCommand(0.75), 
-          new IntakeOutCommandGroup(wrist, arm, telescope, intake).withTimeout(2),
-          new RestModeCommandGroup(wrist, arm, telescope)
-        )
+      new ParallelCommandGroup(
+        //1.
+        new runPathAuto(
+          swerve, 
+          PathPlanner.loadPath("Auto2ConeForward", new PathConstraints(3, 3))
+        ),
+        //2.
+        new IntakeOutCommandGroup(wrist, arm, telescope, intake).withTimeout(2)
+        //The idea behind this is that we can go from high directly to intake because the robot will be moving
       )    
     );
 

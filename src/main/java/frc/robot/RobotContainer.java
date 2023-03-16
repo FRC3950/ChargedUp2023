@@ -35,9 +35,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
-import frc.robot.autos.auto_Sequences.ScoreHigh_Move_ScoreHigh;
+import frc.robot.autos.auto_Sequences.Auto2Cone;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -99,13 +100,15 @@ public class RobotContainer {
     private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
     private final Command a = s_Arm.zeroSensorFalcons();
 
+    private final IntakeTeleopCommand intakeTeleopCommand = new IntakeTeleopCommand(s_Intake);
+
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
     private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup restmode = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
     private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new ScoreHigh_Move_ScoreHigh(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
+    private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new Auto2Cone(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
 
 
@@ -156,32 +159,23 @@ public class RobotContainer {
         s_Telescope.setDefaultCommand(
             new TelescopeBangBang(
                 s_Telescope,
-                () -> -1.0 * manipulate.getRawAxis(5) * manipulate.getRawAxis(5) * Math.signum(manipulate.getRawAxis(5)) 
-                 //() -> -1 *manipulate.getRawAxis(5)
-                 )
-                 );
+                () -> -1.0 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
+            )
+        );
 
         s_Arm.setDefaultCommand(
             new ArmPercentCommand(
                 s_Arm,
-                 () -> -0.75 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
-                 )
-                 );
+                () -> -0.75 * manipulate.getRawAxis(0) * manipulate.getRawAxis(0) * Math.signum(manipulate.getRawAxis(0)) 
+            )
+        );
 
         s_Wrist.setDefaultCommand(
             new WristPercentCommand(
                 s_Wrist,
-
-                () -> Math.abs(manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value)) > Math.abs(manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)) ? 
-               0.3 * manipulate.getRawAxis(XboxController.Axis.kLeftTrigger.value) : 
-               0.6 * -manipulate.getRawAxis(XboxController.Axis.kRightTrigger.value)
-
-                //() -> -0.8 * manipulate.getRawAxis(4) * manipulate.getRawAxis(4) * Math.signum(manipulate.getRawAxis(4)) 
-
-                
-                //() ->  -0.7*manipulate.getRawAxis(4)
-                 )
-                 );
+                () -> 0.6 * manipulate.getRawAxis(2)
+            )
+        );
 
         // Configure the button bindings
         configureButtonBindings();
@@ -249,10 +243,6 @@ public class RobotContainer {
          new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
              .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
 
-        
-
-           
-
         startCenteringDrive.whileTrue(s_Swerve.driveHorizontalCommand());
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
@@ -260,14 +250,18 @@ public class RobotContainer {
             .whileTrue(s_Swerve.turnToZeroCommand());
 
 
-        new JoystickButton(manipulate, XboxController.Button.kX.value)
+        new JoystickButton(manipulate, XboxController.Button.kX.value) //FIXME
             .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
         
-        new JoystickButton(manipulate, XboxController.Button.kY.value)
+        new JoystickButton(manipulate, 4) 
             .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.75), () -> s_Intake.setIntake(0.0), s_Intake));
         
-        new JoystickButton(manipulate, XboxController.Button.kRightBumper.value)
+        new JoystickButton(manipulate, 6) 
             .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
+
+        new POVButton(manipulate, 0) //Button with 1 person
+            .whileTrue(intakeTeleopCommand);
+    
 
     }
 
