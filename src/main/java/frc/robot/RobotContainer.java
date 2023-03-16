@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
@@ -90,6 +91,7 @@ public class RobotContainer {
         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
         s_Swerve // The drive subsystem. Used to properly set the requirements of path following commands
     );
+    
 
 
     /* Commands */
@@ -122,10 +124,9 @@ public class RobotContainer {
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
     private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
-    Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("auto_DriveToCone", 3, 3));
 
 
-
+    
 
 
 
@@ -133,6 +134,15 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+
+        eventMap.put("scoreHigh", scoreHigh);
+
+        eventMap.put("intakeDown", goToIntakePosition);
+        eventMap.put("restMode", restmode);
+        eventMap.put("midScore", scoreMid);
+        eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
+        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("auto_DriveToCone", 3, 3));
+
 
         s_Swerve.setDefaultCommand(
                 new TeleopSwerve(
@@ -217,6 +227,7 @@ public class RobotContainer {
         SmartDashboard.putData("Arm Move to (275) ", armTo_275);
 
         SmartDashboard.putData("Intake Out", goToIntakePosition);
+        SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(1.0)));
 
     }
 

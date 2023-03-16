@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Telescope;
@@ -24,7 +26,7 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
         telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
-        new ArmToAngleGroup(arm, 62).withTimeout(2)
+        new ArmToAngleGroup(arm, 62).withTimeout(0.75)
       ),
 
       //2. 
@@ -35,17 +37,20 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
           // We Must be sure that 0 for wrist is top and limit engaged
           // And 0 for arm is retracted and limit engaged
           //The phases must be RIGHT
-      ).withTimeout(2),
+      ).withTimeout(0.75),
 
       //3. 
       new ParallelCommandGroup(
         new ArmToAngleGroup(arm, 62),
         wrist.moveWristToPosition_Command(30400),
         telescope.extendArmToDistance_Command(59119)
-      ).withTimeout(2), //do we need this? 
+      ).withTimeout(0.75), //do we need this? 
 
       //4.
-      new RunCommand(() -> intake.setIntake(0.7), intake)
+      new InstantCommand(() -> intake.setIntake(0.6), intake)
+      
+     
+
     );
   }
 }
