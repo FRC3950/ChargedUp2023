@@ -105,6 +105,7 @@ public class RobotContainer {
     private final SequentialCommandGroup teleopScoreMid = new TeleopScoreMid(s_Wrist, s_Arm, s_Telescope);
     private final SequentialCommandGroup teleopScoreHigh = new TeleopScoreHigh(s_Wrist, s_Arm, s_Telescope);
 
+    private final AutoBalancePIDCommand autoBalanceCommand = new AutoBalancePIDCommand(s_Swerve);
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
     private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
@@ -149,7 +150,7 @@ public class RobotContainer {
         eventMap.put("intakeUntil", intakeUntil);
         eventMap.put("intakeOff", intakeOff );
 
-        eventMap.put("midScoreHold", scoreMidHold);
+        eventMap.put("scoreMidHold", scoreMidHold);
         eventMap.put("intakeOut", new InstantCommand(()->s_Intake.setIntake(-0.2)));
 
         eventMap.put("intakeDown", goToIntakePosition);
@@ -235,6 +236,7 @@ public class RobotContainer {
         SmartDashboard.putData("Arm Move to (275) ", armTo_275);
 
         SmartDashboard.putData("Intake Out", goToIntakePosition);
+        SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
         //SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(0.5)));
 
     }

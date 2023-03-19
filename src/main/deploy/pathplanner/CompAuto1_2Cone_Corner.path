@@ -17,7 +17,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "scoreHigh"
+          "scoreHigh",
+          "restMode"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -102,11 +103,11 @@
     {
       "anchorPoint": {
         "x": 1.55,
-        "y": 0.6
+        "y": 2.6
       },
       "prevControl": {
         "x": 1.8444443681574936,
-        "y": 0.6
+        "y": 2.6
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -116,7 +117,6 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "midScore",
           "restMode"
         ],
         "executionBehavior": "sequential",
@@ -145,7 +145,7 @@
       ]
     },
     {
-      "position": 1.250909090909012,
+      "position": 0.9309090909090876,
       "names": [
         "event",
         "intakeDown"
