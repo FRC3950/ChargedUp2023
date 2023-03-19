@@ -26,31 +26,28 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
         telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
-        new ArmToAngleGroup(arm, 62).withTimeout(0.75)
+        new ArmToAngleGroup(arm, 62)
       ),
 
       //2. 
       new ParallelCommandGroup(
         //0.0252 pid wrist
-        wrist.moveWristToPosition_Command(30400),
-        telescope.extendArmToDistance_Command(59119)
+        wrist.moveWristToPosition_Command(31500),
+        telescope.extendArmToDistance_Command(61500)
           // We Must be sure that 0 for wrist is top and limit engaged
           // And 0 for arm is retracted and limit engaged
           //The phases must be RIGHT
-      ).withTimeout(0.75),
+      ).withTimeout(0.5),
 
       //3. 
       new ParallelCommandGroup(
         new ArmToAngleGroup(arm, 62),
-        wrist.moveWristToPosition_Command(30400),
-        telescope.extendArmToDistance_Command(59119)
-      ).withTimeout(0.75), //do we need this? 
+        wrist.moveWristToPosition_Command(31000),
+        telescope.extendArmToDistance_Command(60500)
+      ).withTimeout(0.6), //do we need this? 
 
       //4.
-      new InstantCommand(() -> intake.setIntake(0.6), intake)
-      
-     
-
+      new InstantCommand(()-> intake.setIntake(0.65))
     );
   }
 }

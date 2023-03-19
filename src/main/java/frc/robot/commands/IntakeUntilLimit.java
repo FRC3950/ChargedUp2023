@@ -4,40 +4,41 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class IntakeTeleopCommand extends CommandBase {
-  /** Creates a new IntakeTeleop. */
+public class IntakeUntilLimit extends CommandBase {
+  /** Creates a new intakeUntilLimit. */
   private final Intake intake;
-  public IntakeTeleopCommand(Intake intake) {
+  public IntakeUntilLimit(Intake intake) {
     this.intake = intake;
     addRequirements(intake);
+
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+    intake.setIntake(0.65);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!intake.limitIsEngaged()){
-      intake.setIntake(0.6);
-    }
-    else if(intake.limitIsEngaged()){
-      intake.setIntake(0.0);
-    }
+    intake.setIntake(0.65);
   }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setIntake(0.0);
+    intake.setIntake(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return intake.limitIsEngaged();
   }
 }

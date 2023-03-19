@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
@@ -38,7 +31,7 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
 
-    public boolean isInInfoMode = false; //Should include this on all subsystems as a quick-toggle to SD stuff 
+    public boolean isInInfoMode = true; //Should include this on all subsystems as a quick-toggle to SD stuff 
 
     //SmartDashBoard
     double angleToTurn = 0.0;
@@ -74,9 +67,10 @@ public class Swerve extends SubsystemBase {
     
 
     public Swerve() {
-        gyro = new Pigeon2(Constants.kSwerve.pigeonID);
+        gyro = new Pigeon2(Constants.kSwerve.pigeonID, "CANivore");
         gyro.configFactoryDefault();
         zeroGyro();
+
         SmartDashboard.putNumber("angleToTurn", angleToTurn);
         SmartDashboard.putNumber("horizontalSpeed_SD", horizontalSpeed_SD);
 
@@ -89,7 +83,7 @@ public class Swerve extends SubsystemBase {
 
 
         //Fix for setting module offsets
-        Timer.delay(1.0);
+        Timer.delay(3.5);
         resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDriveOdometry(Constants.kSwerve.swerveKinematics, getYaw(), getModulePositions());
@@ -171,6 +165,10 @@ public class Swerve extends SubsystemBase {
         gyro.setYaw(0);
     }
 
+    public void configYaw(double yaw){
+        gyro.setYaw(yaw);
+    }
+
     public Rotation2d getYaw() {
         return (Constants.kSwerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
@@ -190,9 +188,12 @@ public class Swerve extends SubsystemBase {
                 SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
                 SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
                 SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+
+                
             }
            
         }
+
         SmartDashboard.putNumber("Pitch", getPitch());
         SmartDashboard.putNumber("Swerve: Roll", getRoll());
         SmartDashboard.putNumber("Swerve: Angle", gyro.getYaw());

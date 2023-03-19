@@ -22,8 +22,8 @@ import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
 
-  private final WPI_TalonFX masterArm = new WPI_TalonFX(Constants.kArm.UpperArm);
-  private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm);
+  private final WPI_TalonFX masterArm = new WPI_TalonFX(Constants.kArm.UpperArm, "CANivore");
+  private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm, "CANivore");
   private final Encoder encoder = new Encoder(0, 1);
   private boolean isInInfoMode = true;
   private final DoubleSolenoid armLock = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kLock.closed, Constants.kLock.open);

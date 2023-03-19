@@ -62,5 +62,9 @@ public class Intake extends SubsystemBase {
     if(isInInfoMode){
       SmartDashboard.putBoolean("Intake solenoid", (getState().equals(Constants.kIntake.EXTENDED)));
     }
+    // if(limitIsEngaged()){
+    //   upper.set(0);
+    //   lower.set(0);
+    // }
   }
 }

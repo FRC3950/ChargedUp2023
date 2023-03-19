@@ -52,11 +52,9 @@ public class Telescope extends SubsystemBase {
         this);
   }
 
-
   public void retractArm(double speed) {
-   setBrake(Value.kReverse);
+    setBrake(Value.kReverse);
     leader.set(-.2);
-        
   }
 
   public void setEncoder(int count){
@@ -92,21 +90,19 @@ public class Telescope extends SubsystemBase {
     return brake.get();
   }
 
+  public boolean isLimitEngaged(){
+    return leader.isRevLimitSwitchClosed() == 1;
+  }
+
   @Override
   public void periodic() {
     if(isInInfoMode){
       SmartDashboard.putNumber("Telescope: Encoder Count", getEncoder());
-   
-
-      
     }
-
-
 
     if(leader.getSensorCollection().isRevLimitSwitchClosed() == 1){
       setEncoder(0);
     }
-    
 
   }
 }

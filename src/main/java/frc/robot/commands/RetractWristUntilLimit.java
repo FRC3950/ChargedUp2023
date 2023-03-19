@@ -5,39 +5,36 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Wrist;
 
-public class IntakeTeleopCommand extends CommandBase {
-  /** Creates a new IntakeTeleop. */
-  private final Intake intake;
-  public IntakeTeleopCommand(Intake intake) {
-    this.intake = intake;
-    addRequirements(intake);
+public class RetractWristUntilLimit extends CommandBase {
+  /** Creates a new RetractWristUntilLimit. */
+  private final Wrist wrist;
+  public RetractWristUntilLimit(Wrist wrist) {
+    this.wrist = wrist;
+    addRequirements(wrist);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    wrist.setSpeed(-0.2);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if(!intake.limitIsEngaged()){
-      intake.setIntake(0.6);
-    }
-    else if(intake.limitIsEngaged()){
-      intake.setIntake(0.0);
-    }
-  }
+  public void execute() {}
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setIntake(0.0);
+    wrist.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return wrist.isLimitSwithEngaged();
   }
 }

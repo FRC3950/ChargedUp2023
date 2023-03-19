@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -33,8 +35,8 @@ public class ScoreMidCommandGroup extends SequentialCommandGroup {
       //new InstantCommand(intake::toggleSolenoid), //Only use for auto
 
       new WaitCommand(0.5),
-      new InstantCommand(() -> intake.setIntake(0))
-
+      new InstantCommand(() -> intake.setIntake(0)),
+      new InstantCommand(() -> intake.setIntake(Value.kForward))
     );
   }
 }

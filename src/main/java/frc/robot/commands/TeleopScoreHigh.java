@@ -18,9 +18,9 @@ import frc.robot.subsystems.Wrist;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreHighCommandGroup extends SequentialCommandGroup {
+public class TeleopScoreHigh extends SequentialCommandGroup {
   /** Creates a new scoreMid. */
-  public ScoreHighCommandGroup(Wrist wrist, Arm arm, Telescope telescope, Intake intake) {
+  public TeleopScoreHigh (Wrist wrist, Arm arm, Telescope telescope) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -28,15 +28,9 @@ public class ScoreHighCommandGroup extends SequentialCommandGroup {
       new ArmToAngleGroup(arm, 280),
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
-        telescope.extendArmToDistance_Command(304254)
-      ).withTimeout(1.5),
-      new WaitCommand(0.25),
-      new InstantCommand(() -> intake.setIntake(-0.2)),
+        telescope.extendArmToDistance_Command(304054)
+      ).withTimeout(1.5)
       //new InstantCommand(intake::toggleSolenoid), //Only use for auto
-
-      new WaitCommand(0.5),
-      new InstantCommand(() -> intake.setIntake(0)),
-      new InstantCommand(() -> intake.setIntake(Value.kForward))
     );
   }
 }

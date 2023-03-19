@@ -36,9 +36,10 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
-import frc.robot.autos.auto_Sequences.Auto2Cone;
+import frc.robot.autos.AutoSequences.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -97,20 +98,23 @@ public class RobotContainer {
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
-    private final exampleAuto exampleAuto = new exampleAuto(s_Swerve);
     private final Command a = s_Arm.zeroSensorFalcons();
 
+    private final SequentialCommandGroup scoreMidHold = new ScoreMidCommandGroupWait(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final IntakeTeleopCommand intakeTeleopCommand = new IntakeTeleopCommand(s_Intake);
+    private final SequentialCommandGroup teleopScoreMid = new TeleopScoreMid(s_Wrist, s_Arm, s_Telescope);
+    private final SequentialCommandGroup teleopScoreHigh = new TeleopScoreHigh(s_Wrist, s_Arm, s_Telescope);
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
     private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup restmode = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
+    private final SequentialCommandGroup goToIntakeTeleopPosition = new TeleopIntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup restModeCommand = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
     private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new Auto2Cone(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-
+    private final IntakeUntilLimit intakeOff = new IntakeUntilLimit(s_Intake); //?
 
     private final SequentialCommandGroup armTo_0 = new ArmToAngleGroup(s_Arm, 0 );
     private final SequentialCommandGroup armTo_50 = new ArmToAngleGroup(s_Arm, 50);
@@ -120,11 +124,11 @@ public class RobotContainer {
     private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
     private final SequentialCommandGroup armTo_275 = new ArmToAngleGroup(s_Arm, 275);
 
-
-
+    private final IntakeUntilLimit intakeUntil = new IntakeUntilLimit(s_Intake);
 
     
     /* Auto Commands */
+    private Corner2ConeAuto corner2ConeAuto = new Corner2ConeAuto(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
     private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
 
@@ -138,13 +142,23 @@ public class RobotContainer {
      */
     public RobotContainer() {
 
+        // new Trigger(() -> true) 
+        //     .onTrue(new InstantCommand(() -> s_Swerve.configYaw(180.0), s_Swerve));
+
         eventMap.put("scoreHigh", scoreHigh);
+        eventMap.put("intakeUntil", intakeUntil);
+        eventMap.put("intakeOff", intakeOff );
+
+        eventMap.put("midScoreHold", scoreMidHold);
+        eventMap.put("intakeOut", new InstantCommand(()->s_Intake.setIntake(-0.2)));
 
         eventMap.put("intakeDown", goToIntakePosition);
-        eventMap.put("restMode", restmode);
+        eventMap.put("restMode", restModeCommand);
         eventMap.put("midScore", scoreMid);
         eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
-        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("auto_DriveToCone", 3, 3));
+        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
+
+        autoChooser.addOption("Auto_2Cone_Wall", fullAuto);
 
 
         s_Swerve.setDefaultCommand(
@@ -181,9 +195,9 @@ public class RobotContainer {
         configureButtonBindings();
 
         // Autochooser
-        //autoChooser.addOption("Example S Curve", exampleAuto);
+      //  autoChooser.addOption("Wall_2Cone_Auto", fullAuto);
 
-        createAllAutoPathCommandsBasedOnPathDirectory();
+        //createAllAutoPathCommandsBasedOnPathDirectory();
 
 
         SmartDashboard.putData("Auto Selection", autoChooser);
@@ -199,15 +213,15 @@ public class RobotContainer {
         SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
         SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
 
-       SmartDashboard.putData("Go to intake",goToIntakePosition);
-       SmartDashboard.putData("Rest Mode", restmode);
-       SmartDashboard.putData("Score Mid", scoreMid );
-       SmartDashboard.putData("Score High", scoreHigh);
-       SmartDashboard.putData("Intake standing", intakeStandingPosition);
+        SmartDashboard.putData("Go to intake",goToIntakePosition);
+        SmartDashboard.putData("Rest Mode", restModeCommand);
+        SmartDashboard.putData("Score Mid", scoreMid );
+        SmartDashboard.putData("Score High", scoreHigh);
+        SmartDashboard.putData("Intake standing", intakeStandingPosition);
 
-       SmartDashboard.putData("Full Auto: Score High, Move, Score High", scoreHigh_Move_ScoreHigh);
+        SmartDashboard.putData("Full Auto: Score High, Move, Score High", scoreHigh_Move_ScoreHigh);
 
-       SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
+        SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
 
 
        //Arm to angle
@@ -221,7 +235,7 @@ public class RobotContainer {
         SmartDashboard.putData("Arm Move to (275) ", armTo_275);
 
         SmartDashboard.putData("Intake Out", goToIntakePosition);
-        SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(1.0)));
+        //SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(0.5)));
 
     }
 
@@ -237,31 +251,59 @@ public class RobotContainer {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro())); //Button this way might be 'safer' since the button is private/final when defined outside the constructor. //Honestly not sure what the best practice is or if it matters. Probably would never collide if we kept it public/changeable... idk?
 
+        startCenteringDrive.whileTrue(s_Swerve.driveHorizontalCommand());
+
         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
             .whileTrue(balanceCommand);
 
-         new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-             .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+        new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+            .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
 
-        startCenteringDrive.whileTrue(s_Swerve.driveHorizontalCommand());
+        
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
         new JoystickButton(driver, XboxController.Button.kA.value)
             .whileTrue(s_Swerve.turnToZeroCommand());
-
-
-        new JoystickButton(manipulate, XboxController.Button.kX.value) //FIXME
-            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.75),  () -> s_Intake.setIntake(0.0), s_Intake));
         
-        new JoystickButton(manipulate, 4) 
-            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.75), () -> s_Intake.setIntake(0.0), s_Intake));
+        //button board stuff:
+
+        new JoystickButton(manipulate, 4)
+            .onTrue(restModeCommand);
+
+        new JoystickButton(manipulate, 3)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.65), () -> s_Intake.setIntake(0), s_Intake));
         
-        new JoystickButton(manipulate, 6) 
+        new JoystickButton(manipulate, 10)
+            .whileTrue(intakeTeleopCommand);
+
+        new POVButton(manipulate, 0)
             .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
 
-        new POVButton(manipulate, 0) //Button with 1 person
-            .whileTrue(intakeTeleopCommand);
+        new POVButton(manipulate, 180)
+            .onTrue(intakeStandingPosition);
+
+        //cube
+
+        new JoystickButton(manipulate, 5)
+            .onTrue(teleopScoreHigh); //FIXME command w/ setpoint
+
+        new JoystickButton(manipulate, 6) //FIXME
+            .onTrue(goToIntakeTeleopPosition);
+
+        new POVButton(manipulate, 90)
+            .onTrue(teleopScoreMid);
+
+        //cone 
+
+        new JoystickButton(manipulate, 9)
+            .onTrue(teleopScoreHigh);
     
+        new JoystickButton(manipulate, 2)
+            .onTrue(teleopScoreMid);
+        
+        new JoystickButton(manipulate, 1)
+            .onTrue(goToIntakeTeleopPosition);
+
 
     }
 
@@ -269,21 +311,21 @@ public class RobotContainer {
      * This method creates a {@link runPathAuto} command for each saved path and
      * adds the command to autoChooser for selection.
      */
-    public void createAllAutoPathCommandsBasedOnPathDirectory() {
+    // public void createAllAutoPathCommandsBasedOnPathDirectory() {
 
-        File folder = new File(Filesystem.getDeployDirectory() + "/pathplanner/");
-        File[] listOfFiles = folder.listFiles();
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                if (file.getName().split("\\.") != null) {
-                    PathPlannerTrajectory loadedTrajectory = PathPlanner.loadPath(file.getName().split("\\.")[0],
-                            new PathConstraints(3, 3));
-                    autoChooser.addOption("A_" + file.getName().split("\\.")[0],
-                            new runPathAuto(s_Swerve, loadedTrajectory));
-                }
-            }
-        }
-    }
+    //     File folder = new File(Filesystem.getDeployDirectory() + "/pathplanner/");
+    //     File[] listOfFiles = folder.listFiles();
+    //     for (File file : listOfFiles) {
+    //         if (file.isFile()) {
+    //             if (file.getName().split("\\.") != null) {
+    //                 PathPlannerTrajectory loadedTrajectory = PathPlanner.loadPath(file.getName().split("\\.")[0],
+    //                         new PathConstraints(3, 3));
+    //                 autoChooser.addOption("A_" + file.getName().split("\\.")[0],
+    //                         new runPathAuto(s_Swerve, loadedTrajectory));
+    //             }
+    //         }
+    //     }
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -4,42 +4,47 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Wrist;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class RestModeCommandGroup extends SequentialCommandGroup {
+public class TeleopIntakeOutCommandGroup extends SequentialCommandGroup {
   /** Creates a new RestMode_CommandGroup. */
-  public RestModeCommandGroup(Wrist wrist, Arm arm, Telescope telescope) {
+  public TeleopIntakeOutCommandGroup(Wrist wrist, Arm arm, Telescope telescope, Intake intake) {
     addCommands(
-//1. 
+      //1. 
       new ParallelCommandGroup(
-        new RetractWristUntilLimit(wrist),
-        new RetractTelescopeUntilLimit(telescope)
+        wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
+        telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
+        new ArmToAngleGroup(arm, 62)
+      ),
+
+      //2. 
+      new ParallelCommandGroup(
+        //0.0252 pid wrist
+        wrist.moveWristToPosition_Command(31500),
+        telescope.extendArmToDistance_Command(61500)
           // We Must be sure that 0 for wrist is top and limit engaged
           // And 0 for arm is retracted and limit engaged
           //The phases must be RIGHT
-      ),
-//2. 
-      new ParallelRaceGroup(
-        new ArmToAngleGroup(arm, -8).until(arm::isLimitSwithEngaged),
-        new RunCommand(() -> wrist.setSpeed(-.3), wrist)
-      ).withTimeout(1.5),
+      ).withTimeout(0.5),
+
+      //3. 
       new ParallelCommandGroup(
-        new InstantCommand(() -> wrist.setSpeed(0)),
-        new InstantCommand(() -> telescope.setPercent(0))
-      )
+        new ArmToAngleGroup(arm, 62),
+        wrist.moveWristToPosition_Command(31000),
+        telescope.extendArmToDistance_Command(60500)
+      ).withTimeout(0.6) //do we need this? 
     );
   }
 }

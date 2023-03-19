@@ -50,7 +50,9 @@ public class Wrist extends SubsystemBase {
   }
 
   public void setSpeed(double speed){
-    wrist.set(speed);
+    if(wrist.getSupplyCurrent() <= 40){
+      wrist.set(speed);
+    }
   }
   
   public void setWristEncoder(double count){

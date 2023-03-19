@@ -45,7 +45,7 @@ public class ArmToAnglePID extends PIDCommand {
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
 
-      getController().setTolerance(5); //Roughly 3.5ish degrees
+      getController().setTolerance(6); //Roughly 3.5ish degrees
   }
 
   // Returns true when the command should end.

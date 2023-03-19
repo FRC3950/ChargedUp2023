@@ -25,14 +25,14 @@ public class TelescopeBangBang extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    s_Telescope.setBrake(Value.kReverse);
+    s_Telescope.setBrake(Value.kForward);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //System.out.println(percent.getAsDouble());
-    if(percent.getAsDouble() > 0.0 || percent.getAsDouble() < -0.0){
+    if(percent.getAsDouble() > 0.1 || percent.getAsDouble() < -0.1 && !s_Telescope.isLimitEngaged()){
       if(!s_Telescope.getBrake().equals(Value.kReverse)){
         s_Telescope.setBrake(Value.kReverse);
       }
@@ -43,7 +43,7 @@ public class TelescopeBangBang extends CommandBase {
       s_Telescope.setPercent(0.0);
     }
   }
-//Josh Wrote this part of the code and it will work perfectly. I think...
+  //Josh Wrote this part of the code and it will work perfectly. I think...
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
