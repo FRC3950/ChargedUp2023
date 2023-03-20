@@ -42,8 +42,8 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
       //3. 
       new ParallelCommandGroup(
         new ArmToAngleGroup(arm, 62),
-        wrist.moveWristToPosition_Command(31000),
-        telescope.extendArmToDistance_Command(60500)
+        wrist.moveWristToPosition_Command(31500),
+        telescope.extendArmToDistance_Command(61500)
       ).withTimeout(0.6), //do we need this? 
 
       //4.
