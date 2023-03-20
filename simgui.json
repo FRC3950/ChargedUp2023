@@ -10,15 +10,28 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Akjkjtuo Balance": "Command",
+      "/SmartDashboard/Arm": "Subsystem",
+      "/SmartDashboard/Arm Move to (0) ": "Command",
+      "/SmartDashboard/Arm Move to (150) ": "Command",
+      "/SmartDashboard/Arm Move to (200) ": "Command",
+      "/SmartDashboard/Arm Move to (250) ": "Command",
+      "/SmartDashboard/Arm Move to (275) ": "Command",
       "/SmartDashboard/ArmSubsystem": "Subsystem",
       "/SmartDashboard/Auto Selection": "String Chooser",
+      "/SmartDashboard/AutoBalance PID Command": "Command",
       "/SmartDashboard/Go to intake": "Command",
+      "/SmartDashboard/Intake Out": "Command",
+      "/SmartDashboard/Intake standing": "Command",
       "/SmartDashboard/Lock Arm (Manual)": "Command",
       "/SmartDashboard/Move arm to pos": "Command",
       "/SmartDashboard/Reset Mag Enocder": "Command",
+      "/SmartDashboard/Rest Mode": "Command",
       "/SmartDashboard/Rise Arm To High Angle": "Command",
       "/SmartDashboard/Rise Arm To Mid Angle": "Command",
-      "/SmartDashboard/Unlock Arm (Manual)": "Command"
+      "/SmartDashboard/Score High": "Command",
+      "/SmartDashboard/Score Mid": "Command",
+      "/SmartDashboard/Unlock Arm (Manual)": "Command",
+      "/SmartDashboard/retract arm": "Command"
     },
     "windows": {
       "/FMSInfo": {

@@ -39,7 +39,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
-import frc.robot.autos.AutoSequences.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -113,7 +112,6 @@ public class RobotContainer {
     private final SequentialCommandGroup restModeCommand = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
     private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new Auto2Cone(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final IntakeUntilLimit intakeOff = new IntakeUntilLimit(s_Intake); //?
 
@@ -129,7 +127,6 @@ public class RobotContainer {
 
     
     /* Auto Commands */
-    private Corner2ConeAuto corner2ConeAuto = new Corner2ConeAuto(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
     private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
 
@@ -226,7 +223,6 @@ public class RobotContainer {
         SmartDashboard.putData("Score High", scoreHigh);
         SmartDashboard.putData("Intake standing", intakeStandingPosition);
 
-        SmartDashboard.putData("Full Auto: Score High, Move, Score High", scoreHigh_Move_ScoreHigh);
 
         SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
 
