@@ -156,12 +156,17 @@ public class RobotContainer {
         eventMap.put("restMode", restModeCommand);
         eventMap.put("midScore", scoreMid);
         eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
+
+
         Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
         Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
+        Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 2, 2));
 
 
-        autoChooser.addOption("Auto_SouthWall_2Cone_", fullAuto);
-        autoChooser.addOption("Auto_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
+        autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
+        autoChooser.addOption("Auton_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
+        autoChooser.addOption("Auton_North_2Cone", auto_North_2Cone);
+
 
 
 
