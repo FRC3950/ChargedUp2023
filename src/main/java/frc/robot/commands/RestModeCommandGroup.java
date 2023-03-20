@@ -33,9 +33,9 @@ public class RestModeCommandGroup extends SequentialCommandGroup {
       ),
 //2. 
       new ParallelRaceGroup(
-        new ArmToAngleGroup(arm, -8).until(arm::isLimitSwithEngaged),
+        new ArmToAngleGroup(arm, -11).until(arm::isLimitSwithEngaged),
         new RunCommand(() -> wrist.setSpeed(-.3), wrist)
-      ).withTimeout(1.5),
+      ).withTimeout(1.25),
       new ParallelCommandGroup(
         new InstantCommand(() -> wrist.setSpeed(0)),
         new InstantCommand(() -> telescope.setPercent(0))

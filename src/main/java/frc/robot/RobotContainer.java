@@ -39,7 +39,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
-import frc.robot.autos.AutoSequences.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -113,7 +112,6 @@ public class RobotContainer {
     private final SequentialCommandGroup restModeCommand = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
     private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup scoreHigh_Move_ScoreHigh = new Auto2Cone(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final IntakeUntilLimit intakeOff = new IntakeUntilLimit(s_Intake); //?
 
@@ -129,7 +127,6 @@ public class RobotContainer {
 
     
     /* Auto Commands */
-    private Corner2ConeAuto corner2ConeAuto = new Corner2ConeAuto(s_Wrist, s_Arm, s_Telescope, s_Intake, s_Swerve);
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
     private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
 
@@ -146,6 +143,8 @@ public class RobotContainer {
         // new Trigger(() -> true) 
         //     .onTrue(new InstantCommand(() -> s_Swerve.configYaw(180.0), s_Swerve));
 
+        eventMap.put("autoBalance", autoBalanceCommand);
+
         eventMap.put("scoreHigh", scoreHigh);
         eventMap.put("intakeUntil", intakeUntil);
         eventMap.put("intakeOff", intakeOff );
@@ -157,9 +156,18 @@ public class RobotContainer {
         eventMap.put("restMode", restModeCommand);
         eventMap.put("midScore", scoreMid);
         eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
-        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
 
-        autoChooser.addOption("Auto_2Cone_Wall", fullAuto);
+
+        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
+        Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
+        Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 2, 2));
+
+
+        autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
+        autoChooser.addOption("Auton_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
+        autoChooser.addOption("Auton_North_2Cone", auto_North_2Cone);
+
+
 
 
         s_Swerve.setDefaultCommand(
@@ -220,7 +228,6 @@ public class RobotContainer {
         SmartDashboard.putData("Score High", scoreHigh);
         SmartDashboard.putData("Intake standing", intakeStandingPosition);
 
-        SmartDashboard.putData("Full Auto: Score High, Move, Score High", scoreHigh_Move_ScoreHigh);
 
         SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
 
