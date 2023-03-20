@@ -264,6 +264,9 @@ public class RobotContainer {
 
         new JoystickButton(driver, XboxController.Button.kB.value) // Should eventually do all buttons like this?
             .whileTrue(balanceCommand);
+        
+        new JoystickButton(driver, XboxController.Button.kStart.value)
+            .onTrue(new InstantCommand(s_Swerve::resetModulesToAbsolute));
 
         new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
             .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
