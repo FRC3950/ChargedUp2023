@@ -146,6 +146,8 @@ public class RobotContainer {
         // new Trigger(() -> true) 
         //     .onTrue(new InstantCommand(() -> s_Swerve.configYaw(180.0), s_Swerve));
 
+        eventMap.put("autoBalance", autoBalanceCommand);
+
         eventMap.put("scoreHigh", scoreHigh);
         eventMap.put("intakeUntil", intakeUntil);
         eventMap.put("intakeOff", intakeOff );
@@ -158,8 +160,12 @@ public class RobotContainer {
         eventMap.put("midScore", scoreMid);
         eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
         Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
+        Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
 
-        autoChooser.addOption("Auto_2Cone_Wall", fullAuto);
+
+        autoChooser.addOption("Auto_SouthWall_2Cone_", fullAuto);
+        autoChooser.addOption("Auto_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
+
 
 
         s_Swerve.setDefaultCommand(
