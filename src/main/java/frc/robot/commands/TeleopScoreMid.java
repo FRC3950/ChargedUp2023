@@ -26,10 +26,10 @@ public class TeleopScoreMid  extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-      new ArmToAngleGroup(arm, 257),
+      new ArmToAngleGroup(arm, 261),
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
-        telescope.extendArmToDistance_Command(20535)
+        telescope.extendArmToDistance_Command(62854)
       ).withTimeout(1.5)
       //new InstantCommand(intake::toggleSolenoid), //Only use for auto
     );

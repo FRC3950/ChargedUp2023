@@ -25,15 +25,15 @@ public class IntakeStandingCommandGroup extends SequentialCommandGroup {
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
         telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
-        new ArmToAngleGroup(arm, 113).withTimeout(2)
-      ),
+        new ArmToAngleGroup(arm, 120.5)
+      ).withTimeout(2),
 
       new ParallelCommandGroup(
-        wrist.moveWristToPosition_Command(48000),
-        telescope.extendArmToDistance_Command(2500)
-      ).withTimeout(2),
+        wrist.moveWristToPosition_Command(48331)
+      ),
 
       new RunCommand(() -> intake.setIntake(Value.kForward), intake)
     );
+    addRequirements(wrist, arm, telescope);
   }
 }

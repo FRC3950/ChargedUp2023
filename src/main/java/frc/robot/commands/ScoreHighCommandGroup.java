@@ -25,12 +25,12 @@ public class ScoreHighCommandGroup extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
 
-      new ArmToAngleGroup(arm, 280),
+      new ArmToAngleGroup(arm, 281),
       new ParallelCommandGroup(
         wrist.moveWristToPosition_Command(wrist.kWristDropPosition),
-        telescope.extendArmToDistance_Command(304254)
+        telescope.extendArmToDistance_Command(307254)
       ).withTimeout(1.5),
-      new WaitCommand(0.25),
+      new WaitCommand(0.75),
       new InstantCommand(() -> intake.setIntake(-0.2)),
       //new InstantCommand(intake::toggleSolenoid), //Only use for auto
 

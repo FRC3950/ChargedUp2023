@@ -123,6 +123,8 @@ public class RobotContainer {
     private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
     private final SequentialCommandGroup armTo_275 = new ArmToAngleGroup(s_Arm, 275);
 
+    private final SequentialCommandGroup autoDriveBalance = new driveAutoBalanceCommandGroup(s_Swerve);
+
     private final IntakeUntilLimit intakeUntil = new IntakeUntilLimit(s_Intake);
 
     
@@ -208,7 +210,7 @@ public class RobotContainer {
 
         //createAllAutoPathCommandsBasedOnPathDirectory();
 
-
+        SmartDashboard.putData("Wrist PID test", new HoldWristPIDCommand(s_Wrist, 49500,  () -> manipulate.getRawAxis(2)));
         SmartDashboard.putData("Auto Selection", autoChooser);
 
         SmartDashboard.putData(s_Arm);
@@ -230,6 +232,8 @@ public class RobotContainer {
 
 
         SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
+
+        SmartDashboard.putData("autoDriveBalance", autoDriveBalance);
 
 
        //Arm to angle
@@ -283,14 +287,13 @@ public class RobotContainer {
             .onTrue(restModeCommand);
 
         new JoystickButton(manipulate, 3)
-            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.65), () -> s_Intake.setIntake(0), s_Intake));
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(-0.3), () -> s_Intake.setIntake(0), s_Intake));
         
         new JoystickButton(manipulate, 10)
             .whileTrue(intakeTeleopCommand);
 
         new POVButton(manipulate, 0)
             .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
-
         new POVButton(manipulate, 180)
             .onTrue(intakeStandingPosition);
 

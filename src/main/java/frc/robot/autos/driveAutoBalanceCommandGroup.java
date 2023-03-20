@@ -17,7 +17,8 @@ public class driveAutoBalanceCommandGroup extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      // swerve.driveHorizontalCommand().until(() -> swerve.getRoll() > 10 || swerve.getRoll()<-10)
+      swerve.driveHorizontalCommand().until(() -> swerve.getRoll() > 10 || swerve.getRoll()<-10),
+      new AutoBalancePIDCommand(swerve)
     );
   }
 }
