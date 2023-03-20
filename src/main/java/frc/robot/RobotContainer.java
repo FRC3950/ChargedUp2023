@@ -73,7 +73,7 @@ public class RobotContainer {
     private final JoystickButton startCenteringDrive = new JoystickButton(driver, XboxController.Button.kBack.value);
 
     /* Subsystems */
-    private final Swerve s_Swerve = new Swerve();
+    public  final Swerve s_Swerve = new Swerve();
     private final Intake s_Intake = new Intake();
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();

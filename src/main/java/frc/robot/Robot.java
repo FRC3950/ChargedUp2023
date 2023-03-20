@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     PathPlannerServer.startServer(5811);
     m_robotContainer = new RobotContainer();
-
+    m_robotContainer.s_Swerve.resetModulesToAbsolute();
     
   }
 
@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.s_Swerve.resetModulesToAbsolute();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -81,7 +82,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -89,8 +90,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-
+    m_robotContainer.s_Swerve.resetModulesToAbsolute();
   }
 
   /** This function is called periodically during operator control. */
