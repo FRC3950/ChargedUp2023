@@ -103,11 +103,11 @@
     {
       "anchorPoint": {
         "x": 1.55,
-        "y": 2.6
+        "y": 0.6
       },
       "prevControl": {
         "x": 1.8444443681574936,
-        "y": 2.6
+        "y": 0.6000000000000001
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -117,23 +117,18 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
+          "intakeOut",
           "restMode"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
-        "waitTime": 0
+        "waitTime": 0.2
       }
     }
   ],
   "markers": [
     {
-      "position": 0.11,
-      "names": [
-        "restMode"
-      ]
-    },
-    {
-      "position": 1.8036363636365285,
+      "position": 1.82,
       "names": [
         "intakeUntil"
       ]
