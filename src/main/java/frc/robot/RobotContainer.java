@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,6 +40,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
+import frc.robot.commands.groups.ArmToAngleGroup;
+import frc.robot.commands.groups.IntakeOutCommandGroup;
+import frc.robot.commands.groups.SetPositionsCommandGroup;
 import frc.robot.subsystems.*;
 
 /**
@@ -99,25 +102,24 @@ public class RobotContainer {
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
     private final Command a = s_Arm.zeroSensorFalcons();
 
-    private final SequentialCommandGroup scoreMidHold = new ScoreMidCommandGroupWait(s_Wrist, s_Arm, s_Telescope, s_Intake);
     private final IntakeTeleopCommand intakeTeleopCommand = new IntakeTeleopCommand(s_Intake);
-    private final SequentialCommandGroup teleopScoreMid = new TeleopScoreMid(s_Wrist, s_Arm, s_Telescope);
-    private final SequentialCommandGroup teleopScoreHigh = new TeleopScoreHigh(s_Wrist, s_Arm, s_Telescope);
-
+    
     private final AutoBalancePIDCommand autoBalanceCommand = new AutoBalancePIDCommand(s_Swerve);
+
+    private final SetPositionsCommandGroup scoreMid = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, false);
+    private final SetPositionsCommandGroup scoreHigh = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, false);
+    private final SetPositionsCommandGroup scoreMidAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, true);
+    private final SetPositionsCommandGroup scoreHighAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, true);
+    private final SetPositionsCommandGroup restModeCommand = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake);
+
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
-    private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup goToIntakeTeleopPosition = new TeleopIntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup restModeCommand = new RestModeCommandGroup(s_Wrist, s_Arm, s_Telescope);
-    private final SequentialCommandGroup scoreMid = new ScoreMidCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup scoreHigh = new ScoreHighCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
-    private final SequentialCommandGroup intakeStandingPosition = new IntakeStandingCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake);
+    private final SequentialCommandGroup goToIntakePosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake, true);
+    private final SequentialCommandGroup goToIntakeTeleopPosition = new IntakeOutCommandGroup(s_Wrist, s_Arm, s_Telescope, s_Intake, false);
+    private final SequentialCommandGroup intakeStandingPosition = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 120.5, 48331, 0, false);
     private final IntakeUntilLimit intakeOff = new IntakeUntilLimit(s_Intake); //?
 
     private final SequentialCommandGroup armTo_0 = new ArmToAngleGroup(s_Arm, 0 );
-    private final SequentialCommandGroup armTo_50 = new ArmToAngleGroup(s_Arm, 50);
-    private final SequentialCommandGroup armTo_100 = new ArmToAngleGroup(s_Arm, 100);
     private final SequentialCommandGroup armTo_150 = new ArmToAngleGroup(s_Arm, 150);
     private final SequentialCommandGroup armTo_200 = new ArmToAngleGroup(s_Arm, 200);
     private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
@@ -130,12 +132,6 @@ public class RobotContainer {
     
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
-    private SendableChooser<Command> armToAngleSelect = new SendableChooser<>();
-
-
-    
-
-
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -147,16 +143,16 @@ public class RobotContainer {
 
         eventMap.put("autoBalance", autoBalanceCommand);
 
-        eventMap.put("scoreHigh", scoreHigh);
+        eventMap.put("scoreHigh", scoreHighAuto);
         eventMap.put("intakeUntil", intakeUntil);
         eventMap.put("intakeOff", intakeOff );
 
-        eventMap.put("scoreMidHold", scoreMidHold);
+        eventMap.put("scoreMidHold", scoreMid);
         eventMap.put("intakeOut", new InstantCommand(()->s_Intake.setIntake(-0.2)));
 
         eventMap.put("intakeDown", goToIntakePosition);
         eventMap.put("restMode", restModeCommand);
-        eventMap.put("midScore", scoreMid);
+        eventMap.put("midScore", scoreMidAuto);
         eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
 
 
@@ -182,7 +178,7 @@ public class RobotContainer {
 
 
         s_Telescope.setDefaultCommand(
-            new TelescopeBangBang(
+            new TelescopePercentCommand(
                 s_Telescope,
                 () -> -1.0 * manipulate.getRawAxis(1) * manipulate.getRawAxis(1) * Math.signum(manipulate.getRawAxis(1)) 
             )
@@ -226,8 +222,8 @@ public class RobotContainer {
 
         SmartDashboard.putData("Go to intake",goToIntakePosition);
         SmartDashboard.putData("Rest Mode", restModeCommand);
-        SmartDashboard.putData("Score Mid", scoreMid );
-        SmartDashboard.putData("Score High", scoreHigh);
+        SmartDashboard.putData("Score Mid", scoreMidAuto);
+        SmartDashboard.putData("Score High", scoreHighAuto);
         SmartDashboard.putData("Intake standing", intakeStandingPosition);
 
 
@@ -300,21 +296,21 @@ public class RobotContainer {
         //cube
 
         new JoystickButton(manipulate, 5)
-            .onTrue(teleopScoreHigh); //FIXME command w/ setpoint
+            .onTrue(scoreHigh); //FIXME command w/ setpoint
 
         new JoystickButton(manipulate, 6) //FIXME
             .onTrue(goToIntakeTeleopPosition);
 
         new POVButton(manipulate, 90)
-            .onTrue(teleopScoreMid);
+            .onTrue(scoreMidAuto);
 
         //cone 
 
         new JoystickButton(manipulate, 9)
-            .onTrue(teleopScoreHigh);
+            .onTrue(scoreHigh);
     
         new JoystickButton(manipulate, 2)
-            .onTrue(teleopScoreMid);
+            .onTrue(scoreMid);
         
         new JoystickButton(manipulate, 1)
             .onTrue(goToIntakeTeleopPosition);

@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Telescope;
 
-public class TelescopeBangBang extends CommandBase {
+public class TelescopePercentCommand extends CommandBase {
 
   private final Telescope s_Telescope;
   private DoubleSupplier percent;
 
-  public TelescopeBangBang(Telescope s_Telescope, DoubleSupplier percent) {
+  public TelescopePercentCommand(Telescope s_Telescope, DoubleSupplier percent) {
     this.s_Telescope = s_Telescope;
     this.percent = percent;
     addRequirements(s_Telescope);
