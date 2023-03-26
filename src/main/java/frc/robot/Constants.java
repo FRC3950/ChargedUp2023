@@ -165,6 +165,30 @@ public final class Constants {
             new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
             new PathPoint(new Translation2d(0.0, -0.5588), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
         );
+
+        public static final  PathPlannerTrajectory two_Meter_East = PathPlanner.generatePath(
+            new PathConstraints(3, 3), 
+            new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
+            new PathPoint(new Translation2d(2.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
+        );
+
+        public static final  PathPlannerTrajectory two_Meter_South = PathPlanner.generatePath(
+            new PathConstraints(3, 3), 
+            new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
+            new PathPoint(new Translation2d(0.0, -2.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) // position, heading(direction of travel), holonomic rotation
+        ); 
+
+        public static final  PathPlannerTrajectory Left_90 = PathPlanner.generatePath(
+            new PathConstraints(3, 2), 
+            new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
+            new PathPoint(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(90)) // position, heading(direction of travel), holonomic rotation
+        );
+
+        public static final  PathPlannerTrajectory Left_180 = PathPlanner.generatePath(
+            new PathConstraints(3, 2), 
+            new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), // position, heading(direction of travel), holonomic rotation
+            new PathPoint(new Translation2d(0.0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(180)) // position, heading(direction of travel), holonomic rotation
+        );
     }
 
     public static abstract class kIntake{
