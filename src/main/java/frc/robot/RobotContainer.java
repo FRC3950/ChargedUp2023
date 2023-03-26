@@ -141,24 +141,30 @@ public class RobotContainer {
         // new Trigger(() -> true) 
         //     .onTrue(new InstantCommand(() -> s_Swerve.configYaw(180.0), s_Swerve));
 
-        eventMap.put("autoBalance", autoBalanceCommand);
 
+        //Robot States
         eventMap.put("scoreHigh", scoreHighAuto);
-        eventMap.put("intakeUntil", intakeUntil);
-        eventMap.put("intakeOff", intakeOff );
-
+        eventMap.put("midScore", scoreMidAuto);
         eventMap.put("scoreMidHold", scoreMid);
-        eventMap.put("intakeOut", new InstantCommand(()->s_Intake.setIntake(-0.2)));
-
         eventMap.put("intakeDown", goToIntakePosition);
         eventMap.put("restMode", restModeCommand);
-        eventMap.put("midScore", scoreMidAuto);
-        eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0)));
+
+        //intake Settings
+        eventMap.put("intakeUntil", intakeUntil); //stops intake when cone
+        eventMap.put("intakeOff", intakeOff );
+        eventMap.put("intakeOut", new InstantCommand(()->s_Intake.setIntake(-0.2))); //eject
+        eventMap.put("intakeOff", new InstantCommand(()->s_Intake.setIntake(0))); //off
 
 
-        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 2, 2));
+        //End Balance
+        eventMap.put("autoBalance", autoBalanceCommand);
+
+      
+
+
+        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 3, 2.5));
         Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
-        Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 2, 2));
+        Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 3, 2.5));
 
 
         autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
@@ -245,6 +251,17 @@ public class RobotContainer {
         SmartDashboard.putData("Intake Out", goToIntakePosition);
         SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
         //SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(0.5)));
+
+        //Testing Auto to tune PID
+        //Might need to change heading
+
+        SmartDashboard.putData("pp_Auto_Left90", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_90));
+        SmartDashboard.putData("pp_Auto_Left180", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_180));        
+        SmartDashboard.putData("pp_Auto_East2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_East));
+        SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
+
+
+
 
     }
 
