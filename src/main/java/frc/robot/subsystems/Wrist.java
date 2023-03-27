@@ -5,9 +5,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants;
@@ -15,11 +17,15 @@ import frc.robot.Constants;
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
-  private double kP = 0.0152, kI = 0.0, kD = 0.0, kF = 0.0;
+  private double kP = 0.0152;
   private boolean isInInfoMode = true;
+
+  ArmFeedforward wristFeedforward = new ArmFeedforward(-0.6, 0, 0);
+
   public final double kWristDropPosition = 55000;
   public final double kWristRestPosition = 0;
   public Wrist() {
+
     setWristEncoder(0);
 
     // if(isInInfoMode){
@@ -66,7 +72,7 @@ public class Wrist extends SubsystemBase {
   public boolean isLimitSwithEngaged(){
     return wrist.getSensorCollection().isRevLimitSwitchClosed() == 1;
   }
-
+  
   /**
    * 
    * @return double array {kP, kI, kD, kF}
@@ -88,7 +94,11 @@ public class Wrist extends SubsystemBase {
 
     if(isLimitSwithEngaged()){
         setWristEncoder(0);
-
     }
+
+   // wristFeedforward.calculate()
+  //  if(wrist.getMotorOutputPercent() == 0){
+  //     wrist.set();
+  //  }
   }
 }

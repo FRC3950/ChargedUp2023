@@ -7,12 +7,16 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import frc.robot.subsystems.Wrist;
 
 public class WristPercentCommand extends CommandBase {
   /** Creates a new WristPercentCommand. */
   private final Wrist s_Wrist;
   private final DoubleSupplier percent;
+  private boolean isHolding = true;
+  private double holdPoint = 0;
+
   public WristPercentCommand(Wrist s_Wrist, DoubleSupplier percent) {
     this.s_Wrist = s_Wrist;
     this.percent = percent;
@@ -27,12 +31,15 @@ public class WristPercentCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(percent.getAsDouble() > 0.1 || percent.getAsDouble() < -0.1){
+
+    if(percent.getAsDouble() > 0.05 || percent.getAsDouble() < -0.05){
       s_Wrist.setSpeed(percent.getAsDouble());
+      holdPoint = s_Wrist.getWristEncoder();
     }
     else {
-      s_Wrist.setSpeed(0);
+      s_Wrist.setSpeed(0.000018 * (holdPoint - s_Wrist.getWristEncoder()) + 0.05);
     }
+ 
   }
 
   // Called once the command ends or is interrupted.

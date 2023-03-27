@@ -15,8 +15,8 @@ import frc.robot.subsystems.Wrist;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class HoldWristPIDCommand extends PIDCommand {
   /** Creates a new WristPIDCommand. */
-  final DoubleSupplier percent;
-  public HoldWristPIDCommand(Wrist wrist, double setpoint, DoubleSupplier percent) {
+  Wrist wrist;
+  public HoldWristPIDCommand(Wrist wrist, double setpoint) {
     super(
         // The controller that the command will use
         new PIDController(0.000015, 0, 0),
@@ -28,14 +28,22 @@ public class HoldWristPIDCommand extends PIDCommand {
         output -> {
           wrist.setSpeed(output);
         });
-      this.percent = percent;
+      this.wrist = wrist;
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
+   // getController().setTolerance(100); //Roughly 3.5ish degrees
+
+  }
+
+  @Override
+  public void end(boolean interrupted){
+    //wrist.setSpeed(-0.1);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (percent.getAsDouble() > 0.1 || percent.getAsDouble() < -0.1);
+    return  false;
+
   }
 }

@@ -26,14 +26,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.*;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -129,6 +122,7 @@ public class RobotContainer {
 
     private final IntakeUntilLimit intakeUntil = new IntakeUntilLimit(s_Intake);
 
+
     
     /* Auto Commands */
     private SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -136,6 +130,7 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
+
     public RobotContainer() {
 
         // new Trigger(() -> true) 
@@ -198,11 +193,9 @@ public class RobotContainer {
         );
 
         s_Wrist.setDefaultCommand(
-            new WristPercentCommand(
-                s_Wrist,
-                () -> 0.6 * manipulate.getRawAxis(2)
-            )
+            new  WristPercentCommand(s_Wrist, () -> manipulate.getRawAxis(2) * -0.6)
         );
+        
 
         // Configure the button bindings
         configureButtonBindings();
@@ -212,7 +205,7 @@ public class RobotContainer {
 
         //createAllAutoPathCommandsBasedOnPathDirectory();
 
-        SmartDashboard.putData("Wrist PID test", new HoldWristPIDCommand(s_Wrist, 49500,  () -> manipulate.getRawAxis(2)));
+        SmartDashboard.putData("Wrist PID test", new HoldWristPIDCommand(s_Wrist, 30500));
         SmartDashboard.putData("Auto Selection", autoChooser);
 
         SmartDashboard.putData(s_Arm);
