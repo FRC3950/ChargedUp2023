@@ -193,9 +193,25 @@ public class RobotContainer {
         );
 
         s_Wrist.setDefaultCommand(
-            new  WristPercentCommand(s_Wrist, () -> manipulate.getRawAxis(2) * -0.6)
+
+            new ConditionalCommand(
+
+                    // On Input
+                    new WristPercentCommand(s_Wrist, () -> manipulate.getRawAxis(2) * -0.6),
+
+                    // Hold On No Input
+                    new InstantCommand(
+                            () -> s_Wrist.setSpeed(
+                                    -0.1 * Math.sin(Math.toRadians(
+                                        90 * s_Wrist.getWristEncoder() / 30000)))),
+
+                    // Measure For Input (BooleanSup)
+                    () -> manipulate.getRawAxis(2) > 0.05 || manipulate.getRawAxis(2) < -0.05
+                )
+
         );
-        
+
+
 
         // Configure the button bindings
         configureButtonBindings();

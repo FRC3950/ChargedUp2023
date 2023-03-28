@@ -32,19 +32,18 @@ public class WristPercentCommand extends CommandBase {
   @Override
   public void execute() {
 
-    if(percent.getAsDouble() > 0.05 || percent.getAsDouble() < -0.05){
       s_Wrist.setSpeed(percent.getAsDouble());
-      holdPoint = s_Wrist.getWristEncoder();
-    }
-    else {
-      s_Wrist.setSpeed(0.000018 * (holdPoint - s_Wrist.getWristEncoder()) + 0.05);
-    }
+      //holdPoint = s_Wrist.getWristEncoder();
+    
+   
  
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    s_Wrist.setSpeed(0);
+  }
 
   // Returns true when the command should end.
   @Override
