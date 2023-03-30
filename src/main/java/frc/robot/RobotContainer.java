@@ -34,6 +34,7 @@ import frc.robot.Constants.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.commands.groups.ArmToAngleGroup;
+import frc.robot.commands.groups.HighToIntake;
 import frc.robot.commands.groups.IntakeOutCommandGroup;
 import frc.robot.commands.groups.SetPositionsCommandGroup;
 import frc.robot.subsystems.*;
@@ -104,6 +105,7 @@ public class RobotContainer {
     private final SetPositionsCommandGroup scoreMidAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, true);
     private final SetPositionsCommandGroup scoreHighAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, true);
     private final SetPositionsCommandGroup restModeCommand = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake);
+    private final HighToIntake HighToIntakeAuto = new HighToIntake(s_Wrist, s_Arm, s_Telescope, s_Intake, true);
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
@@ -143,6 +145,7 @@ public class RobotContainer {
         eventMap.put("scoreMidHold", scoreMid);
         eventMap.put("intakeDown", goToIntakePosition);
         eventMap.put("restMode", restModeCommand);
+        eventMap.put("HighToIntake",HighToIntakeAuto);
 
         //intake Settings
         eventMap.put("intakeUntil", intakeUntil); //stops intake when cone
