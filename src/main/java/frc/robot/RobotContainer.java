@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -34,6 +35,7 @@ import frc.robot.Constants.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.commands.groups.ArmToAngleGroup;
+import frc.robot.commands.groups.HighToIntake;
 import frc.robot.commands.groups.IntakeOutCommandGroup;
 import frc.robot.commands.groups.SetPositionsCommandGroup;
 import frc.robot.subsystems.*;
@@ -82,7 +84,7 @@ public class RobotContainer {
         s_Swerve::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
         Constants.kSwerve.swerveKinematics,
         new PIDConstants(Constants.AutoConstants.kPXController, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        new PIDConstants(1.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+        new PIDConstants(4.0, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
         s_Swerve::setModuleStates, // Module states consumer used to output to the drive subsystem
         eventMap,
         true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
@@ -100,10 +102,16 @@ public class RobotContainer {
     private final AutoBalancePIDCommand autoBalanceCommand = new AutoBalancePIDCommand(s_Swerve);
 
     private final SetPositionsCommandGroup scoreMid = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, false);
-    private final SetPositionsCommandGroup scoreHigh = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, false);
+    private final SetPositionsCommandGroup scoreHigh = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 271000, false);
+    
+    private final SetPositionsCommandGroup scoreMidDown = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 183.5, 24267, 298, false);
+    private final SetPositionsCommandGroup scoreHighDown = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 245, 29000, 198316, false);
+
     private final SetPositionsCommandGroup scoreMidAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, true);
     private final SetPositionsCommandGroup scoreHighAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, true);
     private final SetPositionsCommandGroup restModeCommand = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake);
+    private final SetPositionsCommandGroup coneDoubleSubstation = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, 33590, 62000, false);
+    private final HighToIntake highToIntake = new HighToIntake(s_Wrist, s_Arm, s_Telescope, s_Intake, true);
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
     private final SequentialCommandGroup armToHigh = new ArmToAngleGroup(s_Arm, 295.5);
@@ -143,6 +151,7 @@ public class RobotContainer {
         eventMap.put("scoreMidHold", scoreMid);
         eventMap.put("intakeDown", goToIntakePosition);
         eventMap.put("restMode", restModeCommand);
+        eventMap.put("highToIntake", highToIntake);
 
         //intake Settings
         eventMap.put("intakeUntil", intakeUntil); //stops intake when cone
@@ -156,17 +165,37 @@ public class RobotContainer {
 
       
 
+       // Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 3, 2.5));
 
-        Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 3, 2.5));
+
+        //Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 3, 2.5));
+      
+      
+        Command auto_Substation_HighConeBal = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_North_HighConeBal", 2, 2));
+        Command autoMidOneConeTest = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_Middle_HighConeBal", 
+        new PathConstraints(2, 2),
+         new PathConstraints(1, 1), 
+         new PathConstraints(2, 2)));
+
+        Command auto_test = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_South_HighConeBal", 2, 2));
+
         Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
-        Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 3, 2.5));
+        Command scoreHigh_MobilityUp = autoBuilder.fullAuto(PathPlanner.loadPathGroup("ScoreHigh_Mobility", 2, 2));
+        Command scoreHigh_Wall_Leave = autoBuilder.fullAuto(PathPlanner.loadPathGroup("ScoreHigh_Rest_Straightout", 2, 2));
 
 
-        autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
-        autoChooser.addOption("Auton_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
-        autoChooser.addOption("Auton_North_2Cone", auto_North_2Cone);
+
+        
+autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
 
 
+        // autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
+       autoChooser.addOption("Auton_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
+      //  autoChooser.addOption("Auton_North_2Cone", auto_North_2Cone);
+        autoChooser.addOption("Wall_HighCone_DriveAwayThenBalance", auto_test);
+        autoChooser.addOption("Experimental_Mid_OneCone_OverTheMiddle", autoMidOneConeTest);
+        autoChooser.addOption("SubStation_HighCone_DriveAwayBalance", auto_Substation_HighConeBal);        
+        autoChooser.addOption("Substation_Score_Moveup_Mobility", scoreHigh_MobilityUp);
 
 
         s_Swerve.setDefaultCommand(
@@ -193,21 +222,10 @@ public class RobotContainer {
         );
 
         s_Wrist.setDefaultCommand(
+            
 
-            new ConditionalCommand(
-
-                    // On Input
-                    new WristPercentCommand(s_Wrist, () -> manipulate.getRawAxis(2) * -0.6),
-
-                    // Hold On No Input
-                    new InstantCommand(
-                            () -> s_Wrist.setSpeed(
-                                    -0.1 * Math.sin(Math.toRadians(
-                                        90 * s_Wrist.getWristEncoder() / 30000)))),
-
-                    // Measure For Input (BooleanSup)
-                    () -> manipulate.getRawAxis(2) > 0.05 || manipulate.getRawAxis(2) < -0.05
-                )
+                // On Input
+                    new WristPercentCommand(s_Wrist, () -> (manipulate.getRawAxis(2) * 0.6))
 
         );
 
@@ -216,58 +234,56 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
 
+
         // Autochooser
       //  autoChooser.addOption("Wall_2Cone_Auto", fullAuto);
 
         //createAllAutoPathCommandsBasedOnPathDirectory();
+        SmartDashboard.putData("testHIGH2OUT",highToIntake);
 
-        SmartDashboard.putData("Wrist PID test", new HoldWristPIDCommand(s_Wrist, 30500));
+        SmartDashboard.putData("testing to find intake", restModeCommand);
+        // SmartDashboard.putData("High To Intake",highToIntake);
+
+        // SmartDashboard.putData("Wrist PID test", new HoldWristPIDCommand(s_Wrist, 30500));
         SmartDashboard.putData("Auto Selection", autoChooser);
 
-        SmartDashboard.putData(s_Arm);
-        SmartDashboard.putData("Akjkjtuo Balance", balanceCommand);
+        // SmartDashboard.putData(s_Arm);
+        // SmartDashboard.putData("Akjkjtuo Balance", balanceCommand);
 
-        SmartDashboard.putData("Lock Arm (Manual)", new InstantCommand(s_Arm::lockArm));
-        SmartDashboard.putData("Unlock Arm (Manual)",new InstantCommand(s_Arm::unlockArm));
+        // SmartDashboard.putData("Lock Arm (Manual)", new InstantCommand(s_Arm::lockArm));
+        // SmartDashboard.putData("Unlock Arm (Manual)",new InstantCommand(s_Arm::unlockArm));
 
-        SmartDashboard.putData("Reset Mag Enocder", new InstantCommand(s_Arm::resetEncoderCountArmMotors));
+        // SmartDashboard.putData("Reset Mag Enocder", new InstantCommand(s_Arm::resetEncoderCountArmMotors));
 
-        SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
-        SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
+        // SmartDashboard.putData("Rise Arm To Mid Angle", armToMid);
+        // SmartDashboard.putData("Rise Arm To High Angle", armToHigh);
 
-        SmartDashboard.putData("Go to intake",goToIntakePosition);
-        SmartDashboard.putData("Rest Mode", restModeCommand);
-        SmartDashboard.putData("Score Mid", scoreMidAuto);
-        SmartDashboard.putData("Score High", scoreHighAuto);
-        SmartDashboard.putData("Intake standing", intakeStandingPosition);
+        // SmartDashboard.putData("Go to intake",goToIntakePosition);
+        // SmartDashboard.putData("Rest Mode", restModeCommand);
+        // SmartDashboard.putData("Score Mid", scoreMidAuto);
+        // SmartDashboard.putData("Score High", scoreHighAuto);
+        // SmartDashboard.putData("Intake standing", intakeStandingPosition);
 
 
-        SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
+        // SmartDashboard.putData("retract arm", new RunCommand(()->s_Telescope.retractArm(-0.2)));
 
-        SmartDashboard.putData("autoDriveBalance", autoDriveBalance);
+        // SmartDashboard.putData("autoDriveBalance", autoDriveBalance);
 
 
        //Arm to angle
     
-        SmartDashboard.putData("Arm Move to (0) ", armTo_0);
-        // SmartDashboard.putData("Arm Move to (50) ", armTo_50);
-        // SmartDashboard.putData("Arm Move to (100) ", armTo_100);
-        SmartDashboard.putData("Arm Move to (150) ", armTo_150);
-        SmartDashboard.putData("Arm Move to (200) ", armTo_200);
-        SmartDashboard.putData("Arm Move to (250) ", armTo_250);
-        SmartDashboard.putData("Arm Move to (275) ", armTo_275);
-
-        SmartDashboard.putData("Intake Out", goToIntakePosition);
-        SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
+     
+       // SmartDashboard.putData("Intake Out", goToIntakePosition);
+       // SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
         //SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(0.5)));
 
         //Testing Auto to tune PID
         //Might need to change heading
 
-        SmartDashboard.putData("pp_Auto_Left90", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_90));
-        SmartDashboard.putData("pp_Auto_Left180", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_180));        
-        SmartDashboard.putData("pp_Auto_East2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_East));
-        SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
+        // SmartDashboard.putData("pp_Auto_Left90", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_90));
+        // SmartDashboard.putData("pp_Auto_Left180", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.Left_180));        
+        // SmartDashboard.putData("pp_Auto_East2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_East));
+        // SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
 
 
 
@@ -316,10 +332,19 @@ public class RobotContainer {
 
         new POVButton(manipulate, 0)
             .onTrue(new InstantCommand(s_Intake::toggleSolenoid, s_Intake));
+
         new POVButton(manipulate, 180)
-            .onTrue(intakeStandingPosition);
+            .onTrue(
+                new ParallelCommandGroup(
+                    coneDoubleSubstation,
+                    // new InstantCommand(() -> s_Intake.setIntake(-0.3)),
+                    new InstantCommand(() -> s_Intake.setIntake(Value.kReverse))
+                                        .beforeStarting(new WaitCommand(0.5))
+                )
+            );
 
         //cube
+
 
         new JoystickButton(manipulate, 5)
             .onTrue(scoreHigh); //FIXME command w/ setpoint
@@ -327,19 +352,22 @@ public class RobotContainer {
         new JoystickButton(manipulate, 6) //FIXME
             .onTrue(goToIntakeTeleopPosition);
 
-        new POVButton(manipulate, 90)
-            .onTrue(scoreMidAuto);
+        new POVButton(manipulate,270)
+            .whileTrue(new StartEndCommand(() -> s_Intake.setIntake(0.3), () -> s_Intake.setIntake(0), s_Intake));
 
         //cone 
 
         new JoystickButton(manipulate, 9)
-            .onTrue(scoreHigh);
+            .onTrue(scoreHighDown);
     
         new JoystickButton(manipulate, 2)
-            .onTrue(scoreMid);
+            .onTrue(scoreMidDown);
         
         new JoystickButton(manipulate, 1)
             .onTrue(goToIntakeTeleopPosition);
+
+        new POVButton(manipulate, 90)
+            .onTrue(scoreMid);
 
 
     }

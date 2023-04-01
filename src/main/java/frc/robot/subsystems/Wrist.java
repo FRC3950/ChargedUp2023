@@ -17,13 +17,16 @@ import frc.robot.Constants;
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
-  private double kP = 0.0152;
+  private double kP = 0.0200;
   private boolean isInInfoMode = true;
 
   ArmFeedforward wristFeedforward = new ArmFeedforward(-0.6, 0, 0);
 
   public final double kWristDropPosition = 55000;
   public final double kWristRestPosition = 0;
+
+  public double holdPosition = 0;
+
   public Wrist() {
 
     setWristEncoder(0);
@@ -38,12 +41,12 @@ public class Wrist extends SubsystemBase {
     wrist.setInverted(true);
     wrist.setNeutralMode(NeutralMode.Brake);
     wrist.config_kP(0, kP);
-    wrist.configAllowableClosedloopError(0, 300);  //allowable error or not to keep motor goin
+    wrist.configAllowableClosedloopError(0, 100);  //allowable error or not to keep motor goin
   }
 
   public Command moveWristToPosition_Command(double distance) {
     return new RunCommand(
-        () -> this.wrist.set(ControlMode.Position, distance),
+        () -> this.wrist.set(ControlMode.Position, distance, DemandType.ArbitraryFeedForward, 0.05),
         this);
   }
 
@@ -67,6 +70,14 @@ public class Wrist extends SubsystemBase {
 
   public double getWristEncoder(){
     return wrist.getSelectedSensorPosition();
+  }
+
+  public void setHoldPosition(double count){
+    holdPosition = count;
+  }
+
+  public double getHoldPosition(){
+    return holdPosition;
   }
 
   public boolean isLimitSwithEngaged(){

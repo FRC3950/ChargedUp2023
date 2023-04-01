@@ -36,16 +36,16 @@ public class Arm extends SubsystemBase {
   /** Creates a new ArmSubsystem. */
   public Arm() {
 
-    SmartDashboard.putNumber("Arm kF", 0.00);
-    SmartDashboard.putNumber("Arm kP", 0.0); 
-    SmartDashboard.putNumber("Arm kI", 0.0);
+    // SmartDashboard.putNumber("Arm kF", 0.00);
+    // SmartDashboard.putNumber("Arm kP", 0.0); 
+    // SmartDashboard.putNumber("Arm kI", 0.0);
 
-    SmartDashboard.putNumber("Arm kD", 0.0);
+    // SmartDashboard.putNumber("Arm kD", 0.0);
 
-    SmartDashboard.putNumber("mm_Accel", 2000);
-    SmartDashboard.putNumber("mm_Vel", 2000);
+    // SmartDashboard.putNumber("mm_Accel", 2000);
+    // SmartDashboard.putNumber("mm_Vel", 2000);
 
-    SmartDashboard.putNumber("targetPosition", 0);
+    // SmartDashboard.putNumber("targetPosition", 0);
 
 
     encoder.reset();
@@ -140,9 +140,8 @@ public class Arm extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(isInInfoMode){
+    if(false){
       SmartDashboard.putBoolean("Limit Switch Engaged", isLimitSwithEngaged());
-      SmartDashboard.putNumber("angle", encoder.getDistance());
       SmartDashboard.putNumber("Encoder Rate", encoder.getRate());
       SmartDashboard.putNumber("Limit Switch value", masterArm.getSensorCollection().isFwdLimitSwitchClosed());
       SmartDashboard.putNumber("Limit Rev Switch value", masterArm.getSensorCollection().isRevLimitSwitchClosed());
@@ -151,6 +150,8 @@ public class Arm extends SubsystemBase {
 
       SmartDashboard.putBoolean("Solenoid state", (getSolenoid().equals(Value.kForward)));
     }
+    SmartDashboard.putNumber("angle", encoder.getDistance());
+
     
     if(isLimitSwithEngaged()){
       encoder.reset();

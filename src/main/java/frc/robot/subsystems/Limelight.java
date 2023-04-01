@@ -7,8 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.LimelightHelpers;
-import frc.robot.LimelightHelpers.LimelightResults;
+// import frc.robot.LimelightHelpers;
+// import frc.robot.LimelightHelpers.LimelightResults;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
 
@@ -29,22 +29,22 @@ NetworkTableEntry ta = table.getEntry("ta");
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    table.getEntry("<variablename>").getDoubleArray(new double[6]);
+    // table.getEntry("<variablename>").getDoubleArray(new double[6]);
 
-    double x = tx.getDouble(0.0);
-    double y = ty.getDouble(0.0);
-    double area = ta.getDouble(0.0);
+    // double x = tx.getDouble(0.0);
+    // double y = ty.getDouble(0.0);
+    // double area = ta.getDouble(0.0);
 
-    SmartDashboard.putNumber("LimelightX", x);
-    SmartDashboard.putNumber("LimelightY", y);
-    SmartDashboard.putNumber("LimelightArea", area);
+    // SmartDashboard.putNumber("LimelightX", x);
+    // SmartDashboard.putNumber("LimelightY", y);
+    // SmartDashboard.putNumber("LimelightArea", area);
 
-    double[] targetPose = LimelightHelpers.getTargetPose_RobotSpace("");
-for (double d : targetPose) {
-  System.out.println(d);
-}    
-System.out.println("---------------");
-    LimelightHelpers.getBotPose3d_TargetSpace("");
+//     double[] targetPose = LimelightHelpers.getTargetPose_RobotSpace("");
+// for (double d : targetPose) {
+//   System.out.println(d);
+// }    
+// System.out.println("---------------");
+//     LimelightHelpers.getBotPose3d_TargetSpace("");
 
     
 

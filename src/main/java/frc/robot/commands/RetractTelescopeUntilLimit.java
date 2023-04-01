@@ -22,7 +22,7 @@ public class RetractTelescopeUntilLimit extends CommandBase {
   @Override
   public void initialize() {
     telescope.setBrake(Value.kReverse);
-    telescope.setPercent(-.98);
+    telescope.setPercent(-1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

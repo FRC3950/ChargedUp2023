@@ -46,6 +46,10 @@ public class Intake extends SubsystemBase {
   public void setIntake(Value newState){
     solenoid.set(newState);
   }
+
+  public void closeIntake(){
+    solenoid.set(Value.kForward);
+  }
  
 
   public void setIntake(double speed){

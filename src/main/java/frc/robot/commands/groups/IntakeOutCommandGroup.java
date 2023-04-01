@@ -24,16 +24,18 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
     addCommands(
       //1. 
       new ParallelCommandGroup(
-        wrist.moveWristToPosition_Command(-1000).withTimeout(0.25),
-        telescope.extendArmToDistance_Command(-1000).withTimeout(.25),
+        wrist.moveWristToPosition_Command(-1000).withTimeout(1),
+        telescope.extendArmToDistance_Command(-1000).withTimeout(1),
         new ArmToAngleGroup(arm, 62)
-      ),
+      ).withTimeout(1),
 
       //2. 
       new ParallelCommandGroup(
+        
         //0.0252 pid wrist
-        wrist.moveWristToPosition_Command(31500),
-        telescope.extendArmToDistance_Command(61500)
+        wrist.moveWristToPosition_Command(30400 + 500),
+        telescope.extendArmToDistance_Command(46472),
+        new InstantCommand(() -> wrist.setHoldPosition(30400))
           // We Must be sure that 0 for wrist is top and limit engaged
           // And 0 for arm is retracted and limit engaged
           //The phases must be RIGHT
@@ -41,9 +43,10 @@ public class IntakeOutCommandGroup extends SequentialCommandGroup {
 
       //3. 
       new ParallelCommandGroup(
-        new ArmToAngleGroup(arm, 62),
-        wrist.moveWristToPosition_Command(31500),
-        telescope.extendArmToDistance_Command(61500)
+        new ArmToAngleGroup(arm, 61.75),
+        wrist.moveWristToPosition_Command(30400),
+        telescope.extendArmToDistance_Command(46472),
+        new InstantCommand(() -> wrist.setHoldPosition(30400))
       ).withTimeout(0.6), //do we need this? 
 
       //4.

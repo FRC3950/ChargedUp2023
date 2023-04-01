@@ -31,7 +31,10 @@
       "/SmartDashboard/Score High": "Command",
       "/SmartDashboard/Score Mid": "Command",
       "/SmartDashboard/Unlock Arm (Manual)": "Command",
-      "/SmartDashboard/retract arm": "Command"
+      "/SmartDashboard/d": "Scheduler",
+      "/SmartDashboard/retract arm": "Command",
+      "/SmartDashboard/testHIGH2OUT": "Command",
+      "/SmartDashboard/testing to find intake": "Command"
     },
     "windows": {
       "/FMSInfo": {
@@ -45,6 +48,11 @@
         }
       },
       "/SmartDashboard/Move arm to pos": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/testing to find intake": {
         "window": {
           "visible": true
         }

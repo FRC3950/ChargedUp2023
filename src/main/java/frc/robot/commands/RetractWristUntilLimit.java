@@ -19,7 +19,7 @@ public class RetractWristUntilLimit extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    wrist.setSpeed(-0.2);
+    wrist.setSpeed(-0.25); // -wrist.getWristEncoder()/120000
   }
 
   // Called every time the scheduler runs while the command is scheduled.
