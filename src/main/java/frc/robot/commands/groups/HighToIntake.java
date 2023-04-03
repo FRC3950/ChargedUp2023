@@ -27,12 +27,12 @@ public class HighToIntake extends SequentialCommandGroup {
   public HighToIntake(Wrist wrist, Arm arm, Telescope telescope, Intake intake, final boolean isAuto) {
     addCommands(
       //1. 
-      new ParallelDeadlineGroup(
-        telescope.extendArmToDistance_Command(46472).until(()->telescope.getEncoder() > telescopeEncoder -1000),
-        wrist.moveWristToPosition_Command(30400)
+      new ParallelCommandGroup(
+        telescope.extendArmToDistance_Command(46472).until(()->telescope.getEncoder() > 46472 -100),
+        wrist.moveWristToPosition_Command(20900)
       ).withTimeout(2)
       ,
-      new InstantCommand(() -> wrist.setHoldPosition(30400)),
+      new InstantCommand(() -> wrist.setHoldPosition(30900)),
 
       //2.
       new ArmToAngleGroup(arm, 62),

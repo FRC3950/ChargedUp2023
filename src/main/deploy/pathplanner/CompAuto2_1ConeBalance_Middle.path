@@ -22,16 +22,16 @@
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "after",
-        "waitTime": 1.0
+        "waitTime": 0.5
       }
     },
     {
       "anchorPoint": {
-        "x": 3.87,
+        "x": 3.88,
         "y": 2.2
       },
       "prevControl": {
-        "x": 4.1644443681574845,
+        "x": 4.174444368157484,
         "y": 2.2
       },
       "nextControl": null,

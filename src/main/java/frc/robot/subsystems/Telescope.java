@@ -31,8 +31,8 @@ public class Telescope extends SubsystemBase {
     leader.setNeutralMode(NeutralMode.Brake);
     leader.setInverted(true);
 
-    leader.config_kP(0, 0.014978 * 5);
-   // leader.configAllowableClosedloopError(0, 1000);
+    leader.config_kP(0, 0.014978 * 5.1);
+  //  leader.configAllowableClosedloopError(0, 1000);
     
     
   }

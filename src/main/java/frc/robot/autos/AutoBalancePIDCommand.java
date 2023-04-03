@@ -19,7 +19,7 @@ public class AutoBalancePIDCommand extends PIDCommand {
   public AutoBalancePIDCommand(Swerve swerve) {
     super(
         // The controller that the command will use
-        new PIDController(0.01, 0, 0),
+        new PIDController(0.0105, 0, 0),
         // This should return the measurement
         swerve::getRoll,
         // This should return the setpoint (can also be a constant)
@@ -28,6 +28,8 @@ public class AutoBalancePIDCommand extends PIDCommand {
         output -> {
           swerve.driveHorizontal(output); //consider output + base number (kF)
         }, swerve);
+
+       // + Math.signum(output) * 0.02
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     getController().setTolerance(1.5);
