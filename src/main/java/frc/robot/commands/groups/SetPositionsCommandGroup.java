@@ -7,6 +7,7 @@ package frc.robot.commands.groups;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.commands.CloseIntakeCommand;
 import frc.robot.commands.RetractTelescopeUntilLimit;
 import frc.robot.commands.RetractWristUntilLimit;
 import frc.robot.subsystems.*;
@@ -40,7 +41,7 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
     addCommands(
       new ArmToAngleGroup(arm, armEncoder),
       new ParallelDeadlineGroup(
-        telescope.extendArmToDistance_Command(telescopeEncoder).until(()->telescope.getEncoder() > telescopeEncoder -800),
+        telescope.extendArmToDistance_Command(telescopeEncoder).until(()->telescope.getEncoder() > telescopeEncoder - 1000),
         wrist.moveWristToPosition_Command(wristEncoder)
       ).withTimeout(2),
       new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)),
@@ -59,13 +60,7 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
     this.isAuto = false;
 
     addCommands(
-      new PrintCommand("dfdsfsd"),
-
-new ConditionalCommand(new InstantCommand(()-> intake.setIntake(Value.kReverse)), 
-new InstantCommand(()-> intake.setIntake(Value.kForward)), 
-()-> telescope.getEncoder() > 100000),
-new PrintCommand("test"),
-
+      new CloseIntakeCommand(intake, telescope),
       //new PrintCommand("Telescope encoder: " + telescope.getEncoder()),
       //(telescope.getEncoder() > 100000) ? new InstantCommand(() -> intake.setIntake(DoubleSolenoid.Value.kForward)) : new InstantCommand(() -> {}),
       new ParallelCommandGroup(
@@ -73,7 +68,7 @@ new PrintCommand("test"),
         new RetractTelescopeUntilLimit(telescope)
         //new InstantCommand(arm::unlockArm)
       //  .andThen(new InstantCommand(() -> arm.setMotors(0)))
-      ).withTimeout(2),
+      ),
 
       new ParallelCommandGroup(
         new ArmToAngleGroup(arm, -8).until(arm::isLimitSwithEngaged),
