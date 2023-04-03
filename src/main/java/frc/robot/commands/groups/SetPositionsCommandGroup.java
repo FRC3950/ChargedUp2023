@@ -43,7 +43,7 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
       new ParallelDeadlineGroup(
         telescope.extendArmToDistance_Command(telescopeEncoder).until(()->telescope.getEncoder() > telescopeEncoder - 1000),
         wrist.moveWristToPosition_Command(wristEncoder)
-      ).withTimeout(2),
+      ).withTimeout(4),
       new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)),
       (isAuto) ? new InstantCommand(() -> intake.setIntake(-0.2)).andThen(new WaitCommand(0.5)) : new InstantCommand(() -> {})
     );

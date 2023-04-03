@@ -49,6 +49,7 @@ public class Telescope extends SubsystemBase {
         () -> {
           this.leader.set(0);
           this.setBrake(Value.kForward);
+          System.out.println("Extend Arm Ended: " + getEncoder());
         },
         this);
   }

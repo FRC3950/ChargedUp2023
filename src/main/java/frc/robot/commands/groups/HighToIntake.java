@@ -28,7 +28,7 @@ public class HighToIntake extends SequentialCommandGroup {
     addCommands(
       //1. 
       new ParallelCommandGroup(
-        telescope.extendArmToDistance_Command(46472).until(()->telescope.getEncoder() > 46472 -100),
+        telescope.extendArmToDistance_Command(46472).until(()->telescope.getEncoder() > 46472 -1000),
         wrist.moveWristToPosition_Command(20900)
       ).withTimeout(2)
       ,
