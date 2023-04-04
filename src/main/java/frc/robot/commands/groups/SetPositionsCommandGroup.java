@@ -41,7 +41,7 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
     addCommands(
       new ArmToAngleGroup(arm, armEncoder),
       new ParallelDeadlineGroup(
-        telescope.extendArmToDistance_Command(telescopeEncoder).until(()->telescope.getEncoder() > telescopeEncoder - 1000),
+        telescope.extendArmToDistance_Command(telescopeEncoder).until(() -> telescope.getEncoder() > telescopeEncoder - 1000),
         wrist.moveWristToPosition_Command(wristEncoder)
       ).withTimeout(4),
       new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)),
