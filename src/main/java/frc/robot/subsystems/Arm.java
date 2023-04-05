@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -26,6 +27,7 @@ public class Arm extends SubsystemBase {
   private final WPI_TalonFX masterArm = new WPI_TalonFX(Constants.kArm.UpperArm, "CANivore");
   private final WPI_TalonFX slaveArm = new WPI_TalonFX(Constants.kArm.LowerArm, "CANivore");
   private final CANCoder encoder = new CANCoder(35); //add proper can id and change all references from encoder to cancoder
+  
   //private final Encoder encoder = new Encoder(0, 1);
   private boolean isInInfoMode = true;
   private final DoubleSolenoid armLock = new DoubleSolenoid(50, PneumaticsModuleType.REVPH, Constants.kLock.closed, Constants.kLock.open);
@@ -37,6 +39,7 @@ public class Arm extends SubsystemBase {
 
   /** Creates a new ArmSubsystem. */
   public Arm() {
+    encoder.configFeedbackCoefficient(0.25, "fakeDeg",SensorTimeBase.PerSecond);
 
     // SmartDashboard.putNumber("Arm kF", 0.00);
     // SmartDashboard.putNumber("Arm kP", 0.0); 
