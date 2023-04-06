@@ -17,7 +17,7 @@ import frc.robot.Constants;
 public class Wrist extends SubsystemBase {
   /** Creates a new Wrist. */
   private final WPI_TalonFX wrist = new WPI_TalonFX(Constants.kIntake.wrist);
-  private double kP = 0.0200;
+  private double kP = 0.0300; //was 0.02 as of tech valley
   private boolean isInInfoMode = true;
 
   ArmFeedforward wristFeedforward = new ArmFeedforward(-0.6, 0, 0);
@@ -46,7 +46,7 @@ public class Wrist extends SubsystemBase {
 
   public Command moveWristToPosition_Command(double distance) {
     return new RunCommand(
-        () -> this.wrist.set(ControlMode.Position, distance, DemandType.ArbitraryFeedForward, 0.05),
+        () -> this.wrist.set(ControlMode.Position, distance, DemandType.ArbitraryFeedForward, -0.05),
         this);
   }
 

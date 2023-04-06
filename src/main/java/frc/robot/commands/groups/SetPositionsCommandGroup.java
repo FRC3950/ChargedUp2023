@@ -36,16 +36,32 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
 
     this.isAuto = isAuto;
 
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+ 
     addCommands(
+
+  //1. Arm to Angle 
       new ArmToAngleGroup(arm, armEncoder),
-      new ParallelDeadlineGroup(
-        telescope.extendArmToDistance_Command(telescopeEncoder).until(() -> telescope.getEncoder() > telescopeEncoder - 1000),
-        wrist.moveWristToPosition_Command(wristEncoder)
-      ).withTimeout(4),
+
+  //2. Telescope to Extenstion & wrist to position
+      new ParallelCommandGroup(
+        telescope.extendArmToDistance_Command(telescopeEncoder).until(
+          () -> telescope.getEncoder() > telescopeEncoder - 900 || telescope.getEncoder()< telescopeEncoder + 900 
+          ),
+        wrist.moveWristToPosition_Command(wristEncoder).until(
+          () -> wrist.getWristEncoder() > wristEncoder -300 || wrist.getWristEncoder() < wristEncoder + 300
+        )
+      ).withTimeout(5),
+
+  //3. Wrist Holds positions
       new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)),
-      (isAuto) ? new InstantCommand(() -> intake.setIntake(-0.2)).andThen(new WaitCommand(0.5)) : new InstantCommand(() -> {})
+
+  //4. Auto 
+      (isAuto) ? 
+      new InstantCommand(
+        () -> intake.setIntake(-0.2))
+        .andThen(new WaitCommand(0.5))
+        .andThen( new InstantCommand(() -> intake.setIntake(0))) 
+        : new InstantCommand(() -> {})
     );
   }
   /**
@@ -60,24 +76,27 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
     this.isAuto = false;
 
     addCommands(
+
+    //1. Intake Closes If Extended Far Enough
       new CloseIntakeCommand(intake, telescope),
-      //new PrintCommand("Telescope encoder: " + telescope.getEncoder()),
-      //(telescope.getEncoder() > 100000) ? new InstantCommand(() -> intake.setIntake(DoubleSolenoid.Value.kForward)) : new InstantCommand(() -> {}),
+
+    //2. Wrist and Tele retract until limits
       new ParallelCommandGroup(
         new RetractWristUntilLimit(wrist),
         new RetractTelescopeUntilLimit(telescope)
-        //new InstantCommand(arm::unlockArm)
-      //  .andThen(new InstantCommand(() -> arm.setMotors(0)))
       ),
 
-      new ParallelCommandGroup(
+      //3. 
+      new ParallelDeadlineGroup(
         new ArmToAngleGroup(arm, -8).until(arm::isLimitSwithEngaged),
         new RunCommand(() -> wrist.setSpeed(-.25), wrist),
         new RetractTelescopeUntilLimit(telescope)
       ).withTimeout(1.25),
 
+      new InstantCommand(() -> wrist.setHoldPosition(0)),
+
       new ParallelCommandGroup(
-        new InstantCommand(() -> wrist.setHoldPosition(0)),
+   
         new InstantCommand(() -> wrist.setSpeed(0)),
         new InstantCommand(() -> telescope.setPercent(0))
       )

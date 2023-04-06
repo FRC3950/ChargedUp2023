@@ -23,7 +23,7 @@ public class ArmToAngleGroup extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new InstantCommand(arm::unlockArm),
-      new ArmToAnglePID(arm, angle),
+      new ArmToAnglePID(arm, angle).withTimeout(2.4),
       new InstantCommand(() -> arm.setMotors(0)),
       new WaitCommand(0.2),
       new InstantCommand(arm::lockArm)
