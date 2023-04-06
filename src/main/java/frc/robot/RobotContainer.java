@@ -169,37 +169,49 @@ public class RobotContainer {
 
       
 
-       // Command fullAuto = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto1_2Cone_Corner", 3, 2.5));
 
 
-        //Command auto_North_2Cone = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto3_2Cone_North", 3, 2.5));
-      
+        //Substation Autos ------------------
       
         Command auto_Substation_HighConeBal = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_North_HighConeBal", 2, 2));
-        Command autoMidOneConeTest = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_Middle_HighConeBal", 
-        new PathConstraints(2, 2),
-         new PathConstraints(1, 1), 
-         new PathConstraints(2, 2)));
+        autoChooser.addOption("NOT TESTED_SubStation_HighCone_DriveAwayBalance", auto_Substation_HighConeBal);        
 
-        Command auto_test = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_South_HighConeBal", 2, 2));
-
-        Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
         Command scoreHigh_MobilityUp = autoBuilder.fullAuto(PathPlanner.loadPathGroup("ScoreHigh_Mobility", 2, 2));
-        Command scoreHigh_Wall_Leave = autoBuilder.fullAuto(PathPlanner.loadPathGroup("ScoreHigh_Rest_Straightout", 2, 2));
-
-
+        autoChooser.addOption("Substation_Score_Moveup_Mobility", scoreHigh_MobilityUp);
 
         
-autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
+
+        //WALL AUTO -----------------------------
+        Command auto_test = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_South_HighConeBal", 2, 2));
+        autoChooser.addOption("NOT TESTED Wall_HighCone_DriveAwayThenBalance", auto_test);
+
+        Command scoreHigh_Wall_Leave = autoBuilder.fullAuto(PathPlanner.loadPathGroup("ScoreHigh_Rest_Straightout", 2, 2));
+        autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
+
+        Command doubleWall_2ndCube = autoBuilder.fullAuto(PathPlanner.loadPathGroup("z_Wall_DoubleScore",
+        new PathConstraints(3, 3),
+        new PathConstraints(1.5, 1.5), 
+        new PathConstraints(1, 1),
+        new PathConstraints(1.75, 1.75),
+        new PathConstraints(2.25, 2.25)
+        ));
+        autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
 
 
-        // autoChooser.addOption("Auton_SouthWall_2Cone_", fullAuto);
-       autoChooser.addOption("Auton_Mid_1Cone_Balance", auto_Mid_1Cone_Balance);
-      //  autoChooser.addOption("Auton_North_2Cone", auto_North_2Cone);
-        autoChooser.addOption("Wall_HighCone_DriveAwayThenBalance", auto_test);
-        autoChooser.addOption("Experimental_Mid_OneCone_OverTheMiddle", autoMidOneConeTest);
-        autoChooser.addOption("SubStation_HighCone_DriveAwayBalance", auto_Substation_HighConeBal);        
-        autoChooser.addOption("Substation_Score_Moveup_Mobility", scoreHigh_MobilityUp);
+     //MID AUTOS -------------------------
+        Command autoMidOneConeTest = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_Middle_HighConeBal", 
+            new PathConstraints(2.1, 2.1),
+            new PathConstraints(1, 1), 
+            new PathConstraints(2, 2)));
+        autoChooser.addOption("Experimental_Mid_OneCone_MobilityBalance", autoMidOneConeTest);
+
+        
+        Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
+        autoChooser.addOption("SafeBalance_NoLeave", auto_Mid_1Cone_Balance);
+
+  
+
+
 
 
         s_Swerve.setDefaultCommand(
@@ -229,7 +241,7 @@ autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
             
 
                 // On Input
-                    new WristPercentCommand(s_Wrist, () -> (manipulate.getRawAxis(2) * 0.6))
+                    new WristPercentCommand(s_Wrist, () -> (manipulate.getRawAxis(2) * 0.5))
 
         );
 
@@ -265,7 +277,7 @@ autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
       //  autoChooser.addOption("Wall_2Cone_Auto", fullAuto);
 
         //createAllAutoPathCommandsBasedOnPathDirectory();
-        SmartDashboard.putData("testHIGH2OUT",highToIntake);
+        //SmartDashboard.putData("testHIGH2OUT",highToIntake);
 
         SmartDashboard.putData("testing to find intake", restModeCommand);
         // SmartDashboard.putData("High To Intake",highToIntake);
@@ -311,6 +323,8 @@ autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
         // SmartDashboard.putData("pp_Auto_East2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_East));
         // SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
 
+
+    SmartDashboard.putData("Move Wrist to wrist_d", new CreateWristCommand(s_Wrist));
 
 
 
