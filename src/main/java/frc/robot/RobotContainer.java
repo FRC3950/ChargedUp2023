@@ -112,7 +112,7 @@ public class RobotContainer {
     private final SetPositionsCommandGroup scoreMidAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, s_Wrist.kWristDropPosition, 62854.0, true);
     private final SetPositionsCommandGroup scoreHighAuto = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 281.0, s_Wrist.kWristDropPosition, 307254, true);
     private final SetPositionsCommandGroup restModeCommand = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake);
-    private final SetPositionsCommandGroup coneDoubleSubstation = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, 33590, 62000, false);
+    private final SetPositionsCommandGroup coneDoubleSubstation = new SetPositionsCommandGroup(s_Arm, s_Wrist, s_Telescope, s_Intake, 261.0, 33590 + 600, 62000, false);
     private final HighToIntake highToIntake = new HighToIntake(s_Wrist, s_Arm, s_Telescope, s_Intake, true);
 
     private final SequentialCommandGroup armToMid = new ArmToAngleGroup(s_Arm, 275.5);
@@ -200,9 +200,9 @@ public class RobotContainer {
 
      //MID AUTOS -------------------------
         Command autoMidOneConeTest = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_Middle_HighConeBal", 
-            new PathConstraints(2.1, 2.1),
+            new PathConstraints(2.25, 2.5),
             new PathConstraints(1, 1), 
-            new PathConstraints(2, 2)));
+            new PathConstraints(2.1, 2.1)));
         autoChooser.addOption("Experimental_Mid_OneCone_MobilityBalance", autoMidOneConeTest);
 
         
@@ -324,7 +324,7 @@ public class RobotContainer {
         // SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
 
 
-    SmartDashboard.putData("Move Wrist to wrist_d", new CreateWristCommand(s_Wrist));
+    // SmartDashboard.putData("Move Wrist to wrist_d", new CreateWristCommand(s_Wrist));
 
 
 

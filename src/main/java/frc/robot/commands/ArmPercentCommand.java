@@ -43,7 +43,7 @@ public class ArmPercentCommand extends CommandBase {
 
       if (percent.getAsDouble() > 0.1)
       {
-        if(arm.getArmEcnoderAngle() < 280){
+        if(arm.getArmEcnoderAngle() < 300){
           arm.armPercentCommand(percent.getAsDouble());
         }
         else{

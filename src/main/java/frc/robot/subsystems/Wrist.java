@@ -22,7 +22,7 @@ public class Wrist extends SubsystemBase {
 
   ArmFeedforward wristFeedforward = new ArmFeedforward(-0.6, 0, 0);
 
-  public final double kWristDropPosition = 55000;
+  public final double kWristDropPosition = 52500;
   public final double kWristRestPosition = 0;
 
   public double holdPosition = 0;
@@ -46,7 +46,7 @@ public class Wrist extends SubsystemBase {
 
   public Command moveWristToPosition_Command(double distance) {
     return new RunCommand(
-        () -> this.wrist.set(ControlMode.Position, distance, DemandType.ArbitraryFeedForward, -0.05),
+        () -> this.wrist.set(ControlMode.Position, distance, DemandType.ArbitraryFeedForward, -0.02),
         this);
   }
 

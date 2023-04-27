@@ -38,28 +38,27 @@ public class SetPositionsCommandGroup extends SequentialCommandGroup {
 
  
     addCommands(
-
   //1. Arm to Angle 
-      new ArmToAngleGroup(arm, armEncoder),
+      new ArmToAngleGroup(arm, armEncoder).andThen(new PrintCommand("Finished 1")),
 
   //2. Telescope to Extenstion & wrist to position
       new ParallelCommandGroup(
         telescope.extendArmToDistance_Command(telescopeEncoder).until(
-          () -> telescope.getEncoder() > telescopeEncoder - 900 || telescope.getEncoder()< telescopeEncoder + 900 
+          () -> telescope.getEncoder() > telescopeEncoder - 999 && telescope.getEncoder() < telescopeEncoder + 999 //was 900 
           ),
         wrist.moveWristToPosition_Command(wristEncoder).until(
-          () -> wrist.getWristEncoder() > wristEncoder -300 || wrist.getWristEncoder() < wristEncoder + 300
-        )
-      ).withTimeout(5),
+          () -> wrist.getWristEncoder() > wristEncoder -600 && wrist.getWristEncoder() < wristEncoder + 600
+        ).withTimeout(1.6) //was 2.0
+      ).withTimeout(2.2).andThen(new PrintCommand("Finished 2")), //was 2.5
 
   //3. Wrist Holds positions
-      new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)),
+      new InstantCommand(() -> wrist.setHoldPosition(wristEncoder)).andThen(new PrintCommand("Finished 3")),
 
   //4. Auto 
       (isAuto) ? 
       new InstantCommand(
         () -> intake.setIntake(-0.2))
-        .andThen(new WaitCommand(0.5))
+        .andThen(new WaitCommand(0.4)) //was 0.5
         .andThen( new InstantCommand(() -> intake.setIntake(0))) 
         : new InstantCommand(() -> {})
     );
