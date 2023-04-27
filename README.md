@@ -1,5 +1,14 @@
 **Setting Constants**
 ----
+4/27
+Speed up extension 
+motion magic
+General Smartdashboard command for testing
+explore commands and states
+April tags
+YAGSL
+
+
 
 New stuff to try since 1/28:
 Added 2 examples of Instance Command Factory Methods in Swerve Subsystem
