@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,12 +16,20 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
+<<<<<<< Updated upstream
 
   private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 NetworkTableEntry tx = table.getEntry("tx");
 NetworkTableEntry ty = table.getEntry("ty");
 NetworkTableEntry ta = table.getEntry("ta");
   
+=======
+  private final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+
+  private double tx = table.getEntry("tx").getDouble(0);
+  private double ty = table.getEntry("ty").getDouble(8.55); // y-position of robot flush against scoring node
+  private double ta = table.getEntry("ta").getDouble(2.9); // 'target area', used to measure distance from tag
+>>>>>>> Stashed changes
 
   public Limelight() {
 
@@ -28,6 +38,7 @@ NetworkTableEntry ta = table.getEntry("ta");
 
   @Override
   public void periodic() {
+<<<<<<< Updated upstream
     // This method will be called once per scheduler run
     // table.getEntry("<variablename>").getDoubleArray(new double[6]);
 
@@ -49,5 +60,8 @@ NetworkTableEntry ta = table.getEntry("ta");
     
 
   
+=======
+    System.out.println(Arrays.toString(table.getEntry("botpose").getDoubleArray(new double[] {0.0})));
+>>>>>>> Stashed changes
   }
 }
