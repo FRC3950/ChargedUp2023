@@ -77,6 +77,7 @@ public class RobotContainer {
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
     private final Arm s_Arm = new Arm();
+    private final Lime Lime = new Lime();
 
     /* PathPlanner */
     HashMap<String, Command> eventMap = new HashMap<>();
