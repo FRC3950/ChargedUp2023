@@ -174,7 +174,9 @@ public class RobotContainer {
 
         //Substation Autos ------------------
       
-        PathPlanner.generatePath(PathConstraints(2.0, 2.0), {PathPoint(), });
+        // PathPlanner.generatePath(PathConstraints(2.0, 2.0), {PathPoint(), });
+
+        // PathPlanner.generatePath(null, null, null, null, null)
 
         Command auto_Substation_HighConeBal = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_North_HighConeBal", 2, 2));
         autoChooser.addOption("NOT TESTED_SubStation_HighCone_DriveAwayBalance", auto_Substation_HighConeBal);        
@@ -355,6 +357,8 @@ public class RobotContainer {
 
         new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
             .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+
+            
 
         
             //This demonstrates Instance Command FActory Methods - it's cool :D
