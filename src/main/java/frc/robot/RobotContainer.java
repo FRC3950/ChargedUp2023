@@ -77,7 +77,7 @@ public class RobotContainer {
     private final Telescope s_Telescope = new Telescope();
     private final Wrist s_Wrist = new Wrist();
     private final Arm s_Arm = new Arm();
-    private final Lime Lime = new Lime();
+    private final Lime s_Lime = new Lime();
 
     /* PathPlanner */
     HashMap<String, Command> eventMap = new HashMap<>();
@@ -355,11 +355,19 @@ public class RobotContainer {
         new JoystickButton(driver, XboxController.Button.kStart.value)
             .onTrue(new InstantCommand(s_Swerve::resetModulesToAbsolute));
 
-        new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-            .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+        // new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        //     .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
+
+
+            new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+            .onTrue(new runPathAuto(s_Swerve, s_Lime.getPathToAprilTag()));
+
+            new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+            .onTrue(autoBuilder.followPath(s_Lime.getPathToAprilTag()));
 
             
 
+            
         
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP

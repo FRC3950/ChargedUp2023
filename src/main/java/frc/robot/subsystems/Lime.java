@@ -4,6 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,6 +50,17 @@ public class Lime extends SubsystemBase {
 
     // This method will be called once per scheduler run
   }
+
+  public PathPlannerTrajectory getPathToAprilTag(){
+    double[] coordToTag = targetPose.getDoubleArray(new double[6]);
+    return PathPlanner.generatePath(
+    new PathConstraints(3, 3), 
+    new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), 
+    new PathPoint(new Translation2d(coordToTag[0], coordToTag[2]), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) ) ;
   
+}; 
+
+
+
   
 }
