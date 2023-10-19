@@ -174,7 +174,7 @@ public class RobotContainer {
 
         //Substation Autos ------------------
       
-        PathPlanner.generatePath(PathConstraints(2.0, 2.0), {PathPoint(), });
+       // PathPlanner.generatePath(PathConstraints(2.0, 2.0), {PathPoint(), });
 
         Command auto_Substation_HighConeBal = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_North_HighConeBal", 2, 2));
         autoChooser.addOption("NOT TESTED_SubStation_HighCone_DriveAwayBalance", auto_Substation_HighConeBal);        
