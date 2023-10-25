@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
-public class runPathAuto extends SequentialCommandGroup {
-    public runPathAuto(Swerve s_Swerve, Trajectory path) {
+public class RunPathAuto extends SequentialCommandGroup {
+    public RunPathAuto(Swerve s_Swerve, Trajectory path) {
         TrajectoryConfig config = new TrajectoryConfig(
                 Constants.AutoConstants.kMaxSpeedMetersPerSecond,
                 Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)

@@ -37,13 +37,11 @@ public class Lime extends SubsystemBase {
   @Override
   public void periodic() {
 
-     double[] coordToTag = targetPose.getDoubleArray(new double[6]);
-     double aprilTagId_value = lime3Table.getEntry("tid").getDouble(0);
+    double[] coordToTag = targetPose.getDoubleArray(new double[6]);
+    double aprilTagId_value = lime3Table.getEntry("tid").getDouble(0);
 
-     SmartDashboard.putNumber("April_ID", aprilTagId_value);
-     SmartDashboard.putNumberArray("Array Cord to Target", coordToTag);
-
-
+    SmartDashboard.putNumber("April_ID", aprilTagId_value);
+    SmartDashboard.putNumberArray("Array Cord to Target", coordToTag);
     //getValue() returns a NetworkTableValue, which is basically a typed union, as NetworkTable values can be one of several possible type
     //System.out.println(lime3Table.getValue("tx").getDouble());
 
@@ -54,13 +52,10 @@ public class Lime extends SubsystemBase {
   public PathPlannerTrajectory getPathToAprilTag(){
     double[] coordToTag = targetPose.getDoubleArray(new double[6]);
     return PathPlanner.generatePath(
-    new PathConstraints(3, 3), 
-    new PathPoint(new Translation2d(0, 0.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)), 
-    new PathPoint(new Translation2d(coordToTag[0], coordToTag[2]), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)) ) ;
-  
-}; 
-
-
-
-  
+      new PathConstraints(5, 5), 
+      new PathPoint(new Translation2d(0, 0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0)),
+      new PathPoint(new Translation2d(coordToTag[0], -(coordToTag[1] + 1)), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0))
+      //new PathPoint(new Translation2d(coordToTag[0], coordToTag[2]), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0))
+    );
+  }; 
 }

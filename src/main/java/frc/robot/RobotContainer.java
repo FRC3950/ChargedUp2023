@@ -98,6 +98,7 @@ public class RobotContainer {
 
     /* Commands */
     private final AutoBalanceCommand balanceCommand = new AutoBalanceCommand(s_Swerve);
+    private final LimelightPoseDriveCommand limeDrive = new LimelightPoseDriveCommand(false, s_Lime, autoBuilder);
     private final Command a = s_Arm.zeroSensorFalcons();
 
     private final IntakeTeleopCommand intakeTeleopCommand = new IntakeTeleopCommand(s_Intake);
@@ -129,7 +130,7 @@ public class RobotContainer {
     private final SequentialCommandGroup armTo_250 = new ArmToAngleGroup(s_Arm, 250);
     private final SequentialCommandGroup armTo_275 = new ArmToAngleGroup(s_Arm, 275);
 
-    private final SequentialCommandGroup autoDriveBalance = new driveAutoBalanceCommandGroup(s_Swerve);
+    private final SequentialCommandGroup autoDriveBalance = new DriveAutoBalanceCommandGroup(s_Swerve);
 
     private final IntakeUntilLimit intakeUntil = new IntakeUntilLimit(s_Intake);
 
@@ -168,12 +169,12 @@ public class RobotContainer {
         //End Balance
         eventMap.put("autoBalance", autoBalanceCommand);
 
-      
+        
 
 
 
         //Substation Autos ------------------
-      
+        
         // PathPlanner.generatePath(PathConstraints(2.0, 2.0), {PathPoint(), });
 
         // PathPlanner.generatePath(null, null, null, null, null)
@@ -203,29 +204,24 @@ public class RobotContainer {
         autoChooser.addOption("scoreHigh_Wall_leave", scoreHigh_Wall_Leave);
 
 
-     //MID AUTOS -------------------------
+        //MID AUTOS -------------------------
         Command autoMidOneConeTest = autoBuilder.fullAuto(PathPlanner.loadPathGroup("test_Middle_HighConeBal", 
             new PathConstraints(2.25, 2.5),
             new PathConstraints(1, 1), 
             new PathConstraints(2.1, 2.1)));
         autoChooser.addOption("Experimental_Mid_OneCone_MobilityBalance", autoMidOneConeTest);
-
         
         Command auto_Mid_1Cone_Balance = autoBuilder.fullAuto(PathPlanner.loadPathGroup("CompAuto2_1ConeBalance_Middle", 2, 2));
         autoChooser.addOption("SafeBalance_NoLeave", auto_Mid_1Cone_Balance);
 
-  
-
-
-
 
         s_Swerve.setDefaultCommand(
-                new TeleopSwerve(
-                        s_Swerve,
-                        () -> 0.7 * -driver.getRawAxis(translationAxis),
-                        () -> 0.7 * -driver.getRawAxis(strafeAxis),
-                        () -> 0.7 * -driver.getRawAxis(rotationAxis),
-                        () -> robotCentric.getAsBoolean()));
+            new TeleopSwerve(
+                s_Swerve,
+                () -> 0.7 * -driver.getRawAxis(translationAxis),
+                () -> 0.7 * -driver.getRawAxis(strafeAxis),
+                () -> 0.7 * -driver.getRawAxis(rotationAxis),
+                () -> robotCentric.getAsBoolean()));
 
 
         s_Telescope.setDefaultCommand(
@@ -243,43 +239,39 @@ public class RobotContainer {
         );
 
         s_Wrist.setDefaultCommand(
-            
-
                 // On Input
-                    new WristPercentCommand(s_Wrist, () -> (manipulate.getRawAxis(2) * 0.5))
-
+            new WristPercentCommand(s_Wrist, () -> (manipulate.getRawAxis(2) * 0.5))
         );
 
 
     // Log Shuffleboard events for command initialize, execute, finish, interrupt
-    CommandScheduler.getInstance()
-        .onCommandInitialize(
-            command ->
-                Shuffleboard.addEventMarker(
-                    "Command initialized", command.getName(), EventImportance.kNormal));
-    CommandScheduler.getInstance()
-        .onCommandExecute(
-            command ->
-                Shuffleboard.addEventMarker(
-                    "Command executed", command.getName(), EventImportance.kNormal));
-    CommandScheduler.getInstance()
-        .onCommandFinish(
-            command ->
-                Shuffleboard.addEventMarker(
-                    "Command finished", command.getName(), EventImportance.kNormal));
-    CommandScheduler.getInstance()
-        .onCommandInterrupt(
-            command ->
-                Shuffleboard.addEventMarker(
-                    "Command interrupted", command.getName(), EventImportance.kNormal));
-  
-
+        CommandScheduler.getInstance()
+            .onCommandInitialize(
+                command ->
+                    Shuffleboard.addEventMarker(
+                        "Command initialized", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+            .onCommandExecute(
+                command ->
+                    Shuffleboard.addEventMarker(
+                        "Command executed", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+            .onCommandFinish(
+                command ->
+                    Shuffleboard.addEventMarker(
+                        "Command finished", command.getName(), EventImportance.kNormal));
+        CommandScheduler.getInstance()
+            .onCommandInterrupt(
+                command ->
+                    Shuffleboard.addEventMarker(
+                        "Command interrupted", command.getName(), EventImportance.kNormal));
+    
         // Configure the button bindings
         configureButtonBindings();
 
 
         // Autochooser
-      //  autoChooser.addOption("Wall_2Cone_Auto", fullAuto);
+        //  autoChooser.addOption("Wall_2Cone_Auto", fullAuto);
 
         //createAllAutoPathCommandsBasedOnPathDirectory();
         //SmartDashboard.putData("testHIGH2OUT",highToIntake);
@@ -313,11 +305,11 @@ public class RobotContainer {
         // SmartDashboard.putData("autoDriveBalance", autoDriveBalance);
 
 
-       //Arm to angle
-    
-     
-       // SmartDashboard.putData("Intake Out", goToIntakePosition);
-       // SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
+        //Arm to angle
+        
+        
+        // SmartDashboard.putData("Intake Out", goToIntakePosition);
+        // SmartDashboard.putData("AutoBalance PID Command", autoBalanceCommand);
         //SmartDashboard.putData("ppVersion", new SequentialCommandGroup(fullAuto, new WaitCommand(0.5)));
 
         //Testing Auto to tune PID
@@ -329,7 +321,7 @@ public class RobotContainer {
         // SmartDashboard.putData("pp_Auto_South2Meters", autoBuilder.fullAuto(Constants.PathPlannerSimpleTrajectories.two_Meter_South));
 
 
-    // SmartDashboard.putData("Move Wrist to wrist_d", new CreateWristCommand(s_Wrist));
+        // SmartDashboard.putData("Move Wrist to wrist_d", new CreateWristCommand(s_Wrist));
 
 
 
@@ -358,17 +350,9 @@ public class RobotContainer {
         // new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         //     .onTrue(new runPathAuto(s_Swerve, Constants.PathPlannerSimpleTrajectories.advanceNorth_22inches));
 
-
-            new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-            .onTrue(new runPathAuto(s_Swerve, s_Lime.getPathToAprilTag()));
-
-            new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
             .onTrue(autoBuilder.followPath(s_Lime.getPathToAprilTag()));
 
-            
-
-            
-        
             //This demonstrates Instance Command FActory Methods - it's cool :D
             //It turns to Zero Heading, might need to add PID or change to CLOSED LOOP
         new JoystickButton(driver, XboxController.Button.kA.value)
